@@ -53,30 +53,31 @@ var headers = {
     requestCert: true,
     agent: false
  	}
- 	// request(options, function(data){
-//  	console.log(data);
-//  		res.send(data);
-//  	})
+ 	request(options, function(data){
+ 	console.log(data);
+ 		res.send(data);
+ 	});
+});
 
-	request (options , function (error, response, body) {
-		
-  		if (!error && response.statusCode == 200) {
-    		// If response is gzip, unzip first
-    		var encoding = response.headers['content-encoding']
-    		if (encoding && encoding.indexOf('gzip') >= 0) {
-      		zlib.gunzip(body, function(err, dezipped) {
-        		var json_string = dezipped.toString('utf-8');
-        		var json = JSON.parse(json_string);
-        		// Process the json..
-        		console.log(json);
-        		res.send(body);
-      		});
-    	} else {
-      		// Response is not gzipped
-      		res.send(body);
-    	}
-  })
- });
+// 	request (options , function (error, response, body) {
+// 		
+//   		if (!error && response.statusCode == 200) {
+//     		// If response is gzip, unzip first
+//     		var encoding = response.headers['content-encoding']
+//     		if (encoding && encoding.indexOf('gzip') >= 0) {
+//       		zlib.gunzip(body, function(err, dezipped) {
+//         		var json_string = dezipped.toString('utf-8');
+//         		var json = JSON.parse(json_string);
+//         		// Process the json..
+//         		console.log(json);
+//         		res.send(body);
+//       		});
+//     	} else {
+//       		// Response is not gzipped
+//       		res.send(body);
+//     	}
+//   })
+//  });
  
 //  router.post('/logout', c_loginout.logout);
  router.post('/logout', function(req, res){
@@ -90,28 +91,29 @@ var headers = {
     	requestCert: true,
     	agent: false
  		}
- 	// request(options, function(data){
-//  		console.log(data);
-//  		res.send(data);
-//  	});
-		request (options , function (error, response, body) {
-			
-  			if (!error && response.statusCode == 200) {
-    			// If response is gzip, unzip first
-    			var encoding = response.headers['content-encoding']
-    			if (encoding && encoding.indexOf('gzip') >= 0) {
-      			zlib.gunzip(body, function(err, dezipped) {
-        			var json_string = dezipped.toString('utf-8');
-        			var json = JSON.parse(json_string);
-        			// Process the json..
-        			console.log(json);
-        			res.send(body);
-      			});
-    		} else {
-      			// Response is not gzipped
-      			res.send(body);
-    		}
- });
+ 	request(options, function(data){
+ 		console.log(data);
+ 		res.send(data);
+ 	});
+});
+		// request (options , function (error, response, body) {
+// 			
+//   			if (!error && response.statusCode == 200) {
+//     			// If response is gzip, unzip first
+//     			var encoding = response.headers['content-encoding']
+//     			if (encoding && encoding.indexOf('gzip') >= 0) {
+//       			zlib.gunzip(body, function(err, dezipped) {
+//         			var json_string = dezipped.toString('utf-8');
+//         			var json = JSON.parse(json_string);
+//         			// Process the json..
+//         			console.log(json);
+//         			res.send(body);
+//       			});
+//     		} else {
+//       			// Response is not gzipped
+//       			res.send(body);
+//     		}
+//  });
   
  router.use(function(req, res, next) {
 

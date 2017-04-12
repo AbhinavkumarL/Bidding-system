@@ -6,7 +6,7 @@
  const db = require('../db.js');
  
  //To verify if the item posted is a duplicate
- function verifyItemsDB(desc, userid cb){
+ function verifyItemsDB(desc, userid, cb){
  var values = [
  	desc, 
  	userid

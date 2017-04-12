@@ -13,8 +13,8 @@
  var app = express();
  app.use(bodyParser.json());
  var options = {
-   key  : fs.readFileSync('./server.key'),
-   cert : fs.readFileSync('./server.crt')
+   key  : fs.readFileSync('./server3/server.key'),
+   cert : fs.readFileSync('./server3/server.crt')
 };
  
  app.use('/api',routes);

@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `USERS` (
   `first_name` varchar(100) ,
   `last_name` varchar(100) ,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` enum('active','suspended','cancelled','unverified','banned','moderated') NOT NULL DEFAULT 'active',
+  `status` enum('active','suspended') NOT NULL DEFAULT 'suspended',
   `lastseen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `login_location` varchar(100),
 
@@ -37,21 +37,6 @@ CREATE TABLE IF NOT EXISTS `SESSIONS` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
 
 --
--- Table structure for table `Bids`
--- 
-CREATE TABLE IF NOT EXISTS `BIDS` (
-  `bid_id` int(10) NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) NOT NULL ,
-  `item_id` int(10) NOT NULL,
-  `bid_amount` decimal(6,2) NOT NULL,
-  `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT PK_BIDID PRIMARY KEY (`bid_id`),
-  CONSTRAINT FK_userId_bids FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-  CONSTRAINT FK_itemid_bid FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
-
-
---
 -- Table structure for table `Items`
 -- 
 CREATE TABLE IF NOT EXISTS `ITEMS` (
@@ -63,6 +48,20 @@ CREATE TABLE IF NOT EXISTS `ITEMS` (
   `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT PK_itemId PRIMARY KEY (`item_id`),
   CONSTRAINT FK_userid_items FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
+
+--
+-- Table structure for table `Bids`
+-- 
+CREATE TABLE IF NOT EXISTS `BIDS` (
+  `bid_id` int(10) NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) NOT NULL ,
+  `item_id` int(10) NOT NULL,
+  `bid_amount` decimal(6,2) NOT NULL,
+  `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT PK_BIDID PRIMARY KEY (`bid_id`),
+  CONSTRAINT FK_userId_bids FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+  CONSTRAINT FK_itemid_bid FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
 
 

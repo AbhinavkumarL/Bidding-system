@@ -24,31 +24,18 @@
  var addUsersDB = function(body , ip, callback){
 
  		var id =uuid.v1();
- 		var q = "insert into users ( ipaddress, username, password, salt " 
- 			+",email, first_name, last_name, gender, dob, address, address2,"
- 			+"city , state, zip_code, phone,country,status"
+ 		var q = "insert into users ( ipaddress, password, salt " 
+ 			+",email, first_name, last_name, login_location"
  			+")values"
- 			+"(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+ 			+"(?,?,?,?,?,?,?)";
  		var values = [
  		ip,
- 		body.username,
  		md5(body.password+id),
  		id,
  		body.email,
  		body.firstname,
  		body.lastname,
- 		body.gender,
- 		body.dob,
- 		body.address,
- 		body.address2,
- 		body.city,
- 		body.state,
- 		body.zipcode,
- 		body.phone,
- 		body.country,
- 		//Date.now(),
- 		'suspended',
- 		//Date.now()
+ 		body.login_location,
  		]
  		console.log("line53:",body.password, id, md5(body.password+id));
  		db.query( q, values, function(err, data){
