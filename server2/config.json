@@ -1,0 +1,8 @@
+
+{
+	"mysql" : {
+		"db" : "bidsys",
+		"user" : "root",
+		"password" : "tiger"
+	}
+}
