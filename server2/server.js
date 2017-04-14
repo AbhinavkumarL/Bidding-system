@@ -8,6 +8,7 @@
  const express = require('express');
  const bodyParser = require('body-parser');
  const routes = require('./routes.js');
+ var expressJwt = require('express-jwt');
 
  var app = express();
  app.use(bodyParser.json());

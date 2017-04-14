@@ -5,7 +5,6 @@
 
 CREATE TABLE IF NOT EXISTS `USERS` (
   `user_id` int(10) NOT NULL AUTO_INCREMENT,
-  `ipaddress` varchar(25) ,
   `password` varchar(32) NOT NULL,
   `salt` varchar(100) ,
   `email` varchar(60) NOT NULL ,
@@ -15,7 +14,6 @@ CREATE TABLE IF NOT EXISTS `USERS` (
   `status` enum('active','suspended') NOT NULL DEFAULT 'suspended',
   `lastseen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `login_location` varchar(100),
-
   CONSTRAINT PK_USERID PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 
@@ -71,8 +69,10 @@ CREATE TABLE IF NOT EXISTS `BIDS` (
 CREATE TABLE IF NOT EXISTS `TRANSACTIONS` (
   `trans_id` int(10) NOT NULL AUTO_INCREMENT,
   `bid_id` int(10) NOT NULL,
+  `item_id` int(10) NOT NULL,
   `trans_value` decimal(6,2) NOT NULL,
   `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT PK_transId PRIMARY KEY (`trans_id`),
-  CONSTRAINT FK_bidid_trans FOREIGN KEY (`bid_id`) REFERENCES `bids`(`bid_id`)
+  CONSTRAINT FK_bidid_trans FOREIGN KEY (`bid_id`) REFERENCES `bids`(`bid_id`),
+  CONSTRAINT FK_itmeid_trans FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;

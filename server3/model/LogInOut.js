@@ -4,32 +4,35 @@
  
  'use strict';
  const bodyParser = require('body-parser');
- const m_loginout = require('../model/LogInOut.js');
  const jwt = require('jsonwebtoken');
  const db = require('../db.js');
  const md5 = require('md5'); //to hash function to create a token and store it.
 
 //verify if a user exists with the given credentials
-function verifyUserDb (username, callback) {
-	var q = 'select username, password, salt, user_id from users where '
-		+ 'username = "' + username + '"';
+var checkUserDb = function (email,password, callback) {
+console.log("email:",email,"password:",password);
+	var q = 'select email, password, salt, user_id from users where '
+		+ 'email = "' + email + '"';
 	//console.log(username);
 	db.query(q, function(err, res){
 		if (err) {
-			console.error('LoginOut.js: verifyUserDb: err: ' + err);
+			console.error('line 19: ' + err);
 			callback(err, null);
 		} else if (res && res.length) {
-			console.info('LoginOut.js: verifyUserDb: success');
-			callback(null, res);
+			if (md5(password+res[0].salt) === res[0].password) {
+				console.log("password verified",res);
+				callback(null, res);
+			}
 		} else {
-			console.info('LoginOut.js: verifyUserDb: null');
+			console.info('email doesnot exist/not verified');
 			callback(null, null);
 		}
 	});
 }
+
 //Create a session and store the data in sessions table and send the cookie in response
-function createSessionDb (user_id, cookie, callback) {
-	var url = 'http://localhost:3000/login';
+ var storeSessionDB = function(user_id, cookie, callback) {
+	var url = 'http://localhost:9443/api/login';
 	var q = 'insert into sessions (user_id, sesskeyapi) values(?,?)';
 	var values =[
 	user_id, 
@@ -46,8 +49,8 @@ function createSessionDb (user_id, cookie, callback) {
 				if(err){
 					callback(err,null)
 				}else {
-					console.log("User status is Active and session is created...");
-					callback(null,res);
+					console.log("User status is Active and session is created...",user_id);
+					callback(null,{userid:user_id});
 				}
 			});
 		} else {
@@ -57,11 +60,11 @@ function createSessionDb (user_id, cookie, callback) {
 }
 
 //Create a new session when user logs in and stores the session in cookie
-var createSession = function(user_id, callback) {
+var createSessionDb = function(user_id, callback) {
 
-	var token = jwt.sign({ user_id: user_id }, 'SecureKey',{expiresIn: '1h'});
+	var token = jwt.sign({ user_id: user_id },'SecureKey',{expiresIn: '24h'});
 
-	createSessionDb(user_id, token, function(err, res){
+	storeSessionDB(user_id, token, function(err, res){
 
 		if (err) {
 			callback(err, null);
@@ -72,6 +75,7 @@ var createSession = function(user_id, callback) {
 		}
 	});
 }
+
 
 //kills session when user logs out and update the user status
 var killSessionDb = function(user_id, callback){
@@ -94,43 +98,43 @@ var killSessionDb = function(user_id, callback){
 		} 
 	});
 }
-//***********************************************************
-//***********************************************************
-exports.verifyLogin = function(username, password, callback) {
+// ***********************************************************
+// ***********************************************************
+exports.checkuser = function(req, res){
+	var email = req.body.email ? req.body.email : null;
+	var password = req.body.password ? req.body.password : null;
+	
+	checkUserDb(email, password , function(err , data){
+		if (err){
+			res.status(404).send(err);
+		}else {
+			res.status(200).send(data);
+		}
+	})
+	
+}
 
-	verifyUserDb(username, function(err, res){
-			if (err) {
-			callback(err, null);
-			} else if (res && res.length) {
-				if (md5(password+res[0].salt) === res[0].password) {
-				    console.log("password verified , Creating Session");
-					createSession(res[0].user_id, function(err, res){ // we are creating  a session if it is a valid user.
-						if (err) {
-							callback(err, null);
-						} else if (res) {
-							callback(null, true);
-						} else {
-							callback(null, null);
-						}
-					});				
-				} else {
-					callback('unauthorized', 'Wrong password');
-				}
-		} else {
-			callback('unauthorized', 'User not found');
+exports.createsession = function(req, res){
+	var userid = req.body.userid ? req.body.userid : null;
+		
+	createSessionDb(userid,function(err , data){
+		if (err){
+			res.status(404).send(err);
+		}else {
+			res.status(200).send(data);
 		}
 	});
+	
 }
-//******************************************************************
-exports.logout = function(user_id, callback){
-	 
-	killSessionDb(user_id, function(err, res){
-	 	if (err){
-	 		callback(err, null);
-	 	}else if (res) {
-			callback(null, res);
-		} else {
-			callback(null, null);
+
+exports.killsession = function(req, res){
+	var userid = req.body.userid ? req.body.userid : null;
+		
+	killSessionDb(userid,function(err , data){
+		if (err){
+			res.status(404).send(err);
+		}else {
+			res.status(200).send(data);
 		}
-	 });
+	});
 }

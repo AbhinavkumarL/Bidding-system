@@ -4,6 +4,7 @@
  
  'use strict';
  const db = require('../db.js');
+ const bodyParser = require('body-parser');
  
  //Register the items posted by the user in Items table
  function registerBidsDB(userid, itemid, bidamount, cb){
@@ -18,9 +19,9 @@
  	
  	db.query(q,values, function(err, data){
  		if (err){
- 			cb.send(err, null);
+ 			cb(err, null);
  		}else {
- 			cb.send(null,data);
+ 			cb(null,data);
  		}
  	});
  }
@@ -28,14 +29,16 @@
  //***************************************************************
  //***************************************************************
  
- 
- exports.registerBids = function(userid, itemid, bidamount, cb){
+ exports.registerbids = function(req,res){
+ 	var userid = req.body.userid ? (req.body.userid) : null;
+ 	var itemid = req.body.itemid ? (req.body.itemid) : null;
+ 	var bidamount = req.body.bidamount ? (req.body.bidamount) : null;
 
  	registerBidsDB(userid, itemid, bidamount, function(err, data){
  		if (err){
- 			cb.send(err, null);
+ 			res.send(err, null);
  		}else {
- 			cb.send(null,data);
+ 			res.send(null,data);
  		}
  	});
  }
