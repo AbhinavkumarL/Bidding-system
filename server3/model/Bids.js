@@ -9,7 +9,7 @@
  //Register the items posted by the user in Items table
  function registerBidsDB(userid, itemid, bidamount, cb){
  	
- 	var q = "insert into items (user_id, item_id, bid_amount)"
+ 	var q = "insert into bids (user_id, item_id, bid_amount)"
  			+"values(?,?,?)";
  	var values =[
  		userid,
@@ -36,9 +36,9 @@
 
  	registerBidsDB(userid, itemid, bidamount, function(err, data){
  		if (err){
- 			res.send(err, null);
+ 			res.status(404).send(err);
  		}else {
- 			res.send(null,data);
+ 			res.staus(200).send(data);
  		}
  	});
  }
