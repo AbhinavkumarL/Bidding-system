@@ -9,68 +9,73 @@
  const md5 = require('md5');
  
  //verify if the user already exists
- var checkUser = function(email, callback){
+ var checkUserDB = function(email, callback){
+ console.log("line13:");
  	var q = "select * from users where email= ?";
  	db.query(q, email, function(err, data){
+ 	console.log("line 16",q);
  		if (err){
  			callback(err, null);
  		}else {
- 			console.log(data);
  			callback(null, data);
  		}
  	});
  };
  // Add new user if user does not exist
- var addUsersDB = function(body , ip, callback){
+ var addUsersDB = function(body,callback){
 
  		var id =uuid.v1();
- 		var q = "insert into users ( ipaddress, password, salt " 
+ 		var q = "insert into users ( password, salt " 
  			+",email, first_name, last_name, login_location"
  			+")values"
- 			+"(?,?,?,?,?,?,?)";
+ 			+"(?,?,?,?,?,?)";
  		var values = [
- 		ip,
  		md5(body.password+id),
  		id,
  		body.email,
  		body.firstname,
  		body.lastname,
- 		body.login_location,
+ 		body.login_location
  		]
  		console.log("line53:",body.password, id, md5(body.password+id));
+ 		
  		db.query( q, values, function(err, data){
+ 		console.log("line 43",q);
  			if (err){
+ 				console.log(err);
  				callback(err, null);
  			}else {
+ 				console.log("line 48:",data);
  				callback(null, data);
  			}
  		});
 }
- 
+
  /******************************************************
  *******************************************************/
- exports.add = (function(body, ip, callback){
-
-	checkUser(body.email, function(err, data){
+ 
+ exports.verifyuser = (function(req, reply){
+  var email = req.body.email;
+ 	checkUserDB(email, function(err,data){
+ 	console.log("line 60", email);
  		if (err){
-
- 			callback(err, null);
- 		}
- 		if(data.length===0){
- 		
- 			console.log("line 83"+data.length);
- 		
- 			addUsersDB(body, ip, function(err, data){
- 				if (err){
- 					callback(err, null);
- 				}else {
- 					callback(null, data);
- 				}
- 			});
-			
+ 		consloe.log(err);
+ 			reply.status(404).send(err)
  		}else {
-
-		callback(null, data);
-		}
- 	})
+ 		console.log("line 65",data);
+ 			reply.status(200).send(data)
+ 		}
+ 	});
+  });
+ exports.adduser = (function(req, reply){
+ var body = req.body;
+ 	addUsersDB(body, function(err,data){
+ 	console.log("line 72",body);
+ 		if (err){
+ 			reply.status(404).send(err)
+ 		}else {
+ 			reply.status(200).send(data)
+ 		}
+ 	});
  });
+ 

@@ -3,10 +3,11 @@
  */
  'use strict';
  const express = require('express')
- const c_signup = require('./controllers/signup.js')
- const c_loginout = require('./controllers/LogInOut.js')
- const c_items = require('./controllers/Items.js')
- const c_bids= require('./controllers/Bids.js')
+ const m_signup = require('./model/signup.js')
+ const m_loginout = require('./model/LogInOut.js')
+ const m_items = require('./model/Items.js')
+ const m_bids= require('./model/Bids.js')
+ const m_trans = require('./model/Transactions.js')
 
  var router = express.Router();
 
@@ -15,41 +16,14 @@
  	next();
  });
 
- router.post('/signup', c_signup.signup); 
+ router.post('/signup/verifyuser', m_signup.verifyuser); 
+ router.post('/signup/adduser', m_signup.adduser);
+ router.post('/login/checkcredentials', m_loginout.checkuser);
+ router.post('/login/createsession',m_loginout.createsession);
+ router.post('/logout/killsession',m_loginout.killsession);
+ router.post('/user/items',m_items.registeritems);
+ router.post('/user/bids',m_bids.registerbids);
+ router.post('/user/transactions',m_trans.registertransactions);
  
- router.post('/login', c_loginout.login);
-  
- router.use(function(req, res, next) {
 
-  var token = req.headers['x-access-token'];
-
-  // decode token
-  if (token) {
-    // verifies secret and checks exp
-    	jwt.verify(token, 'SecureKey', function(err, decoded) {     
-	
-      		if (err) {
-        		return res.json({ success: false, message: 'Failed to authenticate token.' });    
-      		} else {
-        		// if everything is good, save to request for use in other routes
-        		req.decoded = decoded;    
-        		next();
-      		}
-    	});
-
-  } else {
-    	// if there is no token
-    	// return an error
-    	return res.status(403).send({ 
-        	success: false, 
-        	message: 'No token provided.' 
-    });
-
-  }
-});
-
-router.post('/logout', c_loginout.logout);
-
-router.post('/user/items', c_items.registerItems)
-
- module.exports = router;
+  module.exports = router;

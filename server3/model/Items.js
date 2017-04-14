@@ -4,6 +4,7 @@
  
  'use strict';
  const db = require('../db.js');
+ const bodyParser = require('body-parser');
  
  //To verify if the item posted is a duplicate
  function verifyItemsDB(desc, userid, cb){
@@ -11,12 +12,12 @@
  	desc, 
  	userid
  ]
- var q = "select * from items where item_desc like '"+desc+"' and user_id = "+userid;
+ var q = "select * from items where item_desc like ? and user_id = ?";
  	db.query(q, values, function(err, data){
  		if (err){
- 			cb.send(err, null);
+ 			cb(err, null);
  		}else {
- 			cb.send(null, data);
+ 			cb(null, data);
  		}
  	})
  	
@@ -36,9 +37,9 @@
  	
  	db.query(q,values, function(err, data){
  		if (err){
- 			cb.send(err, null);
+ 			cb(err, null);
  		}else {
- 			cb.send(null,data);
+ 			cb(null,data);
  		}
  	});
  }
@@ -46,17 +47,22 @@
  //***************************************************************
  //***************************************************************
  
- 
- exports.registerItems = function(desc, userid, initbid, shefltime, cb){
- 	verifyItemDB(desc, userid , function(err, data){
+ exports.registeritems = function(req, res){
+ 	console.log("line 52:",req.body);
+	var desc = req.body.desc ? req.body.desc :null;
+	var userid = req.body.userid ? req.body.userid :null;
+	var initbid = req.body.initbid ? req.body.initbid :null;
+	var shelftime = req.body.shelftime ? req.body.shelftime :null;
+	
+ 	verifyItemsDB(desc, userid , function(err, data){
  		if (err){
- 			cb.send(err);
+ 			res.status(404).send(err);
  		}else if(data.length===0){
- 			registerItemDB(desc, userid, initbid, shefltime , function(err, data){
+ 			registerItemsDB(desc, userid, initbid, shelftime , function(err, data){
  				if (err){
- 					cb.send(err, null);
+ 					res.status(404).send(err);
  				}else {
- 					cb.send(null,data);
+ 					res.status(200).send("Items Successfully registered");
  				}
  			});
  		}

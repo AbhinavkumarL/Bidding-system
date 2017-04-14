@@ -19,7 +19,6 @@
  
  app.use('/api',routes);
  
- 
 https.createServer(options,app).listen(9443, function(){
  	console.log("server listening to port 9443....");
  });
