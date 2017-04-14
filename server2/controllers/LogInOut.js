@@ -104,14 +104,16 @@ function killsession(userid, callback){
 	});
 }
 
-exports.logout = function(req, res, callback){
+exports.logout = function(req, res){
 	var userid = req.body.userid ? req.body.userid :null;
 	
 	killsession( userid , function(err, data){
 		if (err){
-			console.log(err, null);
+			console.log(err);
+			res.status(404).send(err);
 		}else {
-			console.log(null, data);
+			console.log(data);
+			res.status(200).send(data);
 		}
 		
 	})

@@ -63,6 +63,7 @@ console.log("email:",email,"password:",password);
 var createSessionDb = function(user_id, callback) {
 
 	var token = jwt.sign({ user_id: user_id },'SecureKey',{expiresIn: '24h'});
+	
 
 	storeSessionDB(user_id, token, function(err, res){
 
@@ -134,7 +135,7 @@ exports.killsession = function(req, res){
 		if (err){
 			res.status(404).send(err);
 		}else {
-			res.status(200).send(data);
+			res.status(200).send("User Logout Successfully");
 		}
 	});
 }

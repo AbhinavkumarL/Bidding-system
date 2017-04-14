@@ -8,8 +8,8 @@
  
  //Register the items posted by the user in Items table
  function updatetransactionsDb(bidid, itemid, bidamount, cb){
- 	
- 	var q = "insert into transactions (bidid, itemid, bidamount)"
+ 	console.log(bidid, itemid, bidamount);
+ 	var q = "insert into transactions (bid_id, item_id, trans_value)"
  			+"values(?,?,?)";
  	var values =[
  		bidid,
@@ -19,6 +19,7 @@
  	
  	db.query(q,values, function(err, data){
  		if (err){
+ 		console.log(err);
  			cb(err, null);
  		}else {
  			cb(null,data);
@@ -36,10 +37,11 @@
 	
 
  	updatetransactionsDb(bidid, itemid, bidamount, function(err, data){
+ 	
  		if (err){
- 			res.send(err, null);
+ 			res.status(404).send(err);
  		}else {
- 			res.send(null,data);
+ 			res.status(200).send("Transaction completed for the item :"+itemid);
  		}
  	});
  }

@@ -33,7 +33,8 @@ var headers = {
  router.use(function(req, res, next) {
 
   var token = req.headers['x-access-token'];
-  console.log("line 36:token passed:",token);
+  console.log("line 36",req.session); 
+  console.log("line 37:token passed:",token);
 
   // decode token
   if (token) {
@@ -65,45 +66,11 @@ var headers = {
 router.post('/logout',c_loginout.logout);
 router.post('/user/items', c_items.postitems);
 router.post('/user/bids',c_bids.postbids);
-router.post('/user/transactions',c_trans.completetransaction);
-// 
-// router.post('/user/items', function(req, res){
-//  	var options={
-//  		uri:'https://localhost:9443/api/user/items',
-//  		method :'POST',
-//  		headers:headers,
-//  		body:req.body,
-//  		json:true,
-//  		rejectUnauthorized: false,
-//     	requestCert: true,
-//     	agent: false
-//  		}
-//  	request(options, function(data){
-//  		console.log(data);
-//  		res.send(data);
-//  	});
-//  });
-//  
-//  
-// router.post('/user/bids', function(req, res){
-//  	var options={
-//  		uri:'https://localhost:9443/api/user/bids',
-//  		method :'POST',
-//  		headers:headers,
-//  		body:req.body,
-//  		json:true,
-//  		rejectUnauthorized: false,
-//     	requestCert: true,
-//     	agent: false
-//  		}
-//  	request(options, function(data){
-//  		console.log(data);
-//  		res.send(data);
-//  	});
-//  });
+router.post('/user/bids/updatetrans',c_bids.autocomplete);
 
- 
- 
+
+//router.post('/user/transactions',c_trans.completetransaction);
+
 // request (options , function (error, response, body) {
 // 			
 //   			if (!error && response.statusCode == 200) {
