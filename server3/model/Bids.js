@@ -5,7 +5,7 @@
  'use strict';
  const db = require('../db.js');
  const bodyParser = require('body-parser');
- 
+ //***************************************************************
  //Register the items posted by the user in Items table
  function registerBidsDB(userid, itemid, bidamount, cb){
  	
@@ -21,14 +21,36 @@
  		if (err){
  			cb(err, null);
  		}else {
+ 			cb(null, data);
+ 		}
+ 	});
+ }
+ //***************************************************************
+ function listbidsDb(itemid, cb) {
+ 	var q = "select * from bids, items where bids.item_id = items.item_id and items.item_id = ? ";
+ 	
+ 	db.query(q,itemid, function(err, data){
+ 		if (err){
+ 			cb(err, null);
+ 		}else {
  			cb(null,data);
  		}
  	});
  }
- 
+ //***************************************************************
+ function listuserbids(userid, cb) {
+ 	var q = "select * from bids, items where bids.item_id = items.item_id and bids.user_id =" +userid;
+ 	
+ 	db.query(q, function(err, data){
+ 		if (err){
+ 			cb(err, null);
+ 		}else {
+ 			cb(null,data);
+ 		}
+ 	});
+ }
  //***************************************************************
  //***************************************************************
- 
  exports.registerbids = function(req,res){
  	var userid = req.body.userid ? (req.body.userid) : null;
  	var itemid = req.body.itemid ? (req.body.itemid) : null;
@@ -38,7 +60,33 @@
  		if (err){
  			res.status(404).send(err);
  		}else {
- 			res.staus(200).send(data);
+ 			res.status(200).send(data);
  		}
  	});
  }
+ //***************************************************************
+ exports.bidsonitem = function(req,res){
+ 	var itemid = req.query.itemid ? (req.query.itemid) : null;
+ 	
+ 	listbidsDb(itemid, function(err, data){
+ 		if (err){
+ 			res.status(404).send(err);
+ 		}else {
+ 			res.status(200).send(data);
+ 		}
+ 	});
+ }
+ //***************************************************************
+ exports.bidstatus = function(req,res){
+ 	var userid = req.query.userid ? (req.query.userid) : null;
+ 	
+ 	listuserbids(userid, function(err, data){
+ 		if (err){
+ 			res.status(404).send(err);
+ 		}else {
+ 			res.status(200).send(data);
+ 		}
+ 	});
+ }
+
+ 

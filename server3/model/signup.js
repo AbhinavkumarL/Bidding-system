@@ -35,7 +35,7 @@
  		body.email,
  		body.firstname,
  		body.lastname,
- 		body.login_location
+ 		body.loginlocation
  		]
  		console.log("line53:",body.password, id, md5(body.password+id));
  		
