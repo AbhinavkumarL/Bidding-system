@@ -3,12 +3,14 @@
  */
  'use strict';
  const express = require('express')
- const m_signup = require('./model/signup.js')
- const m_loginout = require('./model/LogInOut.js')
- const m_items = require('./model/Items.js')
- const m_bids= require('./model/Bids.js')
- const m_trans = require('./model/Transactions.js')
-
+ const m_signup = require('./model/signup.js');
+ const m_loginout = require('./model/LogInOut.js');
+ const m_items = require('./model/Items.js');
+ const m_bids= require('./model/Bids.js');
+ const m_trans = require('./model/Transactions.js');
+ const m_profile = require('./model/profileInfo.js');
+ const m_email = require('./model/mailer.js');
+ 
  var router = express.Router();
 
  router.use(function timeLog(req, res,next){
@@ -24,6 +26,17 @@
  router.post('/user/items',m_items.registeritems);
  router.post('/user/bids',m_bids.registerbids);
  router.post('/user/transactions',m_trans.registertransactions);
+ router.get('/user/profileInfo',m_profile.profileInfo);
+ router.get ('/allitems',m_items.allitems);
+ router.get('/user/highestbidonitem',m_items.highestbidonitem);
+ router.get('/user/bidsonitem',m_bids.bidsonitem);
+ router.post('/user/deleteitems', m_items.deleteitems);
+ router.post('/user/updateprofile',m_profile.updateprofile);
+ router.post('/user/updatelogininfo',m_loginout.updatelogininfo);
+ router.get('/user/bidstatus',m_bids.bidstatus);
+ router.get('/user/purchaseorders',m_trans.itemsuserpurchase);
+ router.get('/user/highestbidonitem',m_items.highestbidonitem);
+//  router.post('./user/sendmail',m_email.sendMail);
  
-
-  module.exports = router;
+ 
+ module.exports = router;

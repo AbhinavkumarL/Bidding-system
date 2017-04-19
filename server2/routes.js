@@ -9,6 +9,7 @@
  const c_items = require('./controllers/Items.js');
  const c_bids= require('./controllers/Bids.js');
  const c_trans = require('./controllers/Transactions.js');
+  const c_profile = require('./controllers/profileInfo.js')
  const jwt = require('jsonwebtoken');
  const zip = require('zlib');
  var router = express.Router();
@@ -24,50 +25,58 @@ var headers = {
 
  router.use(function timeLog(req, res,next){
  	console.log("Time Log:"+Date.now());
+ 	console.log(req.session);
  	next();
  });
  
+ router.get('/allitems',c_items.allitems);
  router.post('/signup', c_signup.signup); 
  router.post('/login', c_loginout.login);
-
- router.use(function(req, res, next) {
-
-  var token = req.headers['x-access-token'];
-  console.log("line 36",req.session); 
-  console.log("line 37:token passed:",token);
-
-  // decode token
-  if (token) {
-    // verifies secret and checks exp
-    	jwt.verify(token, 'SecureKey', function(err, decoded) {     
-	
-      		if (err) {
-      		console.log(err);
-        		return res.json({ success: false, message: 'Failed to authenticate token.' }); 
-        		router.post('/logout',c_loginout.logout);
-      		} else {
-        		// if everything is good, save to request for use in other routes
-        		req.decoded = decoded;    
-        		next();
-      		}
-    	});
-
-  } else {
-    	// if there is no token
-    	// return an error
-    	return res.status(403).send({ 
-        	success: false, 
-        	message: 'No token provided.' 
-    });
-
-  }
-});
-
+// 
+//  router.use(function(req, res, next) {
+//   console.log("line 36:",req.session.cookie);
+//   
+//   var cookie = req.session.cookie;
+//   var token = req.session.cookie.token;
+//   console.log("line 37:token passed:",token);
+// 
+//   // decode token
+//   if (token) {
+//     // verifies secret and checks exp
+//     	jwt.verify(token, 'SecureKey', function(err, decoded) {     
+// 	
+//       		if (err) {
+//       		console.log(err);
+//         		return res.json({ success: false, message: 'Failed to authenticate token.' }); 
+//         		router.post('/logout',c_loginout.logout);
+//       		} else {
+//         		// if everything is good, save to request for use in other routes
+//         		req.decoded = decoded;    
+//         		next();
+//       		}
+//     	});
+// 
+//   } else {
+//     	// if there is no token
+//     	// return an error
+//     	return res.status(403).send({ 
+//         	success: false, 
+//         	message: 'No token provided.' 
+//     });
+// 
+//   }
+// });
+// 
 router.post('/logout',c_loginout.logout);
 router.post('/user/items', c_items.postitems);
 router.post('/user/bids',c_bids.postbids);
 router.post('/user/bids/updatetrans',c_bids.autocomplete);
-
+router.get('/user/bidsonitem',c_bids.bidsonitem);
+router.get('/user/profileInfo',c_profile.profileInfo);
+router.post('/user/deleteitems', c_items.deleteitems);
+router.post('/user/editprofile',c_profile.updateprofile);
+router.get('/user/bidstatus', c_bids.bidstatus);
+router.get('/user/purchaseorder',c_trans.purchaseorder);
 
 //router.post('/user/transactions',c_trans.completetransaction);
 
