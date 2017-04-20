@@ -60,19 +60,20 @@
  			bidid, 
  			itemid
  		]
- 	var q = "select u.user_id userid, u.email to_email from bids b, users u where u.user_id = b.user_id and b.bid_id="+bidid+" and item_id ="+itemid;
- 	console.log("line 65:",q);
- 	db.query(q,function(err, data){
- 		if (err){
- 			console.log(err);
- 			callback(err, null);
- 		}else{
- 			console.log("line 67:",data);
- 			var details = JSON.stringify(data); 
- 			console.log("line 68:",values);
- 			mailer.sendMail(details, function(err,data){
- 				console.log("line 74:",values);
-			
+ 	
+ 	var q = "select u.user_id userid, u.email to_email , t.trans_id transid, i.item_desc description from bids b, users u , transactions t , items i where u.user_id = b.user_id and t.bid_id = b.bid_id and t.item_id = b.item_id and i.item_id = b.item_id and b.bid_id="+bidid+" and b.item_id ="+itemid;
+ 	
+ 		db.query(q,function(err, data){
+ 			if (err){
+ 				console.log(err);
+ 				callback(err, null);
+ 			}else{
+ 				console.log('Line 78: ', data );
+        			var string=JSON.stringify(data);
+        			var json =  JSON.parse(string);
+        			console.log('email : ', json[0].to_email);
+        			
+        			mailer.sendMail(json, function(err,data){
  					if (err){
  						console.log(err);
  						callback(err, null);
@@ -80,11 +81,11 @@
  						console.log(err);
  						callback(null,data);
  					}
- 				})
- 		}
- 	});
- 	// console.log("line 72:",values);
-//  	mailer.sendMail(values, function(err,data){
+ 				});
+ 			}
+ 		});
+//  		console.log("line 72:",details);
+ 	// mailer.sendMail(json, function(err,data){
 //  	console.log("line 74:",values);
 // 
 //  		if (err){

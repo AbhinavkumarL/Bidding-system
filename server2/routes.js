@@ -18,10 +18,18 @@
 var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
   "accept-language" : "en-US,en;q=0.8",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":"X-Requested-With",
   "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
   "accept-encoding" : "gzip,deflate",
 };
 
+var auth = function(req, res, next) {
+  if (req.session && req.session.userid)
+    return next();
+  else
+    return res.status(401).send("User not logged in");
+};
 
  router.use(function timeLog(req, res,next){
  	console.log("Time Log:"+Date.now());
@@ -67,16 +75,16 @@ var headers = {
 //   }
 // });
 // 
-router.post('/logout',c_loginout.logout);
-router.post('/user/items', c_items.postitems);
-router.post('/user/bids',c_bids.postbids);
-router.post('/user/bids/updatetrans',c_bids.autocomplete);
-router.get('/user/bidsonitem',c_bids.bidsonitem);
-router.get('/user/profileInfo',c_profile.profileInfo);
-router.post('/user/deleteitems', c_items.deleteitems);
-router.post('/user/editprofile',c_profile.updateprofile);
-router.get('/user/bidstatus', c_bids.bidstatus);
-router.get('/user/purchaseorder',c_trans.purchaseorder);
+router.post('/logout', c_loginout.logout);
+router.post('/user/items', auth, c_items.postitems);
+router.post('/user/bids', auth, c_bids.postbids);
+router.post('/user/bids/updatetrans', auth,c_bids.autocomplete);
+router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
+router.get('/user/profileInfo', auth,c_profile.profileInfo);
+router.post('/user/deleteitems',auth, c_items.deleteitems);
+router.post('/user/editprofile', auth,c_profile.updateprofile);
+router.get('/user/bidstatus', auth, c_bids.bidstatus);
+router.get('/user/purchaseorder', auth, c_trans.purchaseorder);
 
 //router.post('/user/transactions',c_trans.completetransaction);
 

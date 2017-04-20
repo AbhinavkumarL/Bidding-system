@@ -165,7 +165,11 @@ exports.updatelogininfo = function(req, res){
 // ***********************************************************
 exports.killsession = function(req, res){
 	var userid = req.body.userid ? req.body.userid : null;
-		
+	console.log("line 168",userid);
+	if (userid === null){
+		res.status(404).send("Please provide userid to logout");
+		return;
+	}
 	killSessionDb(userid,function(err , data){
 		if (err){
 			res.status(404).send(err);
