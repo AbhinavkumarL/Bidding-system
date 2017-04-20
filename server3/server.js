@@ -9,9 +9,11 @@
  const bodyParser = require('body-parser');
  const routes = require('./routes.js');
  const compression = require('compression');
+ const cors = require('cors');
  
  var app = express();
  app.use(bodyParser.json());
+ app.use(cors());
  var options = {
    key  : fs.readFileSync('./server3/server.key'),
    cert : fs.readFileSync('./server3/server.crt')

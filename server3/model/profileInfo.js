@@ -6,7 +6,7 @@
  const md5 = require('md5');
 //******************************************************
 function profileInfoDb(userid, cb){
-	var q = 'select * from users where user_id = ?'; 
+	var q = 'select user_id, email, first_name, last_name,date_added, status, lastseen, login_location from users where user_id = ?'; 
 
 	db.query(q, userid, function(err,data){
 		if(err){

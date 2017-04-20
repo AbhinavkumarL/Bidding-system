@@ -159,7 +159,7 @@ exports.postbids = function(req, res){
 			res.status(404).send(err);
 		}else {
 			console.log(null, data);
-			res.status(200).send(err);
+			res.status(200).send(data);
 		}
 		
 	});
@@ -174,7 +174,7 @@ exports.autocomplete = function(req, res){
 			res.status(404).send(err);
 		}else {
 			console.log(null, data);
-			res.status(200).send(err);
+			res.status(200).send(data);
 		}
 	});
 }
@@ -188,7 +188,7 @@ exports.bidsonitem = function(req, res){
 			res.status(404).send(err);
 		}else {
 			console.log(null, data);
-			res.status(200).send(err);
+			res.status(200).send(data);
 		}
 	});
 }
@@ -202,7 +202,7 @@ exports.bidstatus = function(req, res){
 			res.status(404).send(err);
 		}else {
 			console.log(null, data);
-			res.status(200).send(err);
+			res.status(200).send(data);
 		}
 	});
 }

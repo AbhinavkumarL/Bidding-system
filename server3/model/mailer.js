@@ -10,13 +10,13 @@ var transporter = nodemailer.createTransport({
     }
 });
 //***********************************************
-exports.sendMail = function(values, cb){
-	console.log("line 14:", values);
+exports.sendMail = function(json, cb){
+	
 	var mailOptions = {
     	from: 'abhi.4125@gmail.com',
-    	to: values.to_email,
+    	to: json[0].to_email,
     	subject: 'Purchase Confirmation',    	
-    	text: 'Hello, Congratulation you own the auctions.Please, Check your account for purchase order details.', 
+    	text: 'Hello, Congratulation you own the auction on item'+ json[0].description +'. Your transaction id is :'+json[0].transid +'.Please, Check your account for purchase order details. Thank you :):)'
     	};
 	
 	// send mail with defined transport object

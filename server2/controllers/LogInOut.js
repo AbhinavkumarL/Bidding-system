@@ -75,6 +75,7 @@ function verifylogin(email, password, callback) {
  					callback(true); 
  					return; 
  				}
+					
 					console.log("line 78: response:",response.body);
         				callback(false, body);
  			})
@@ -134,19 +135,18 @@ var email = req.body.email ? req.body.email : null;
 var password = req.body.password ? req.body.password : null;
 var loginlocation = req.body.location ? req.body.location : null;
 
+		if (!email || !password) {
+			res.send('login failed. Invalid Credentials'); 
+		}
+		
 	verifylogin( email, password, function(err, data){
 		if (err){
 			console.log(err);
 			res.status(404).send(err);
 		}else {
-			// req.session.cookie={
-// 				expires: '1h',
-// 				originalMaxAge : 3600000,
-// 				httpOnly: true,
-// 				secure :true,
-// 				userid :data.user_id,
-// 				token :data.sessionToken
-// 			}
+			console.log("line 147:",data);
+    		req.session.userid = data.userid;
+    		
 			var userid = data.userid;
 			updatelogininfo(loginlocation, userid, function(err){
 				if (err){
@@ -156,16 +156,16 @@ var loginlocation = req.body.location ? req.body.location : null;
 					console.log("login informtaiont updated");
 				}
 			});
-//         		console.log("Line 100:session userid:",req.session.cookie);
-			res.status(200).send(data);
+        		console.log("Line 100:session userid:",req.session);
+			res.status(200).send("login success! userid :"+data);
 		}
 	})
 }
 //********************************************************
 exports.logout = function(req, res){
-// 	console.log("line 131:session values:",req.session.cookie.userid);
-// 	var userid = req.session.cookie.userid ? req.session.cookie.userid : null;
-	var userid = req.body.userid ? req.body.userid : null;
+	console.log("line 131:session values:",req.session.userid);
+	var userid = req.session.userid ? req.session.userid : null;
+// 	var userid = req.body.userid ? req.body.userid : null;
 	
 	killsession( userid , function(err, data){
 		if (err){
