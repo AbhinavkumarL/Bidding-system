@@ -22,8 +22,10 @@
     	], function (err, result) {
     		if (err){
     			console.log("line 17",err);
+    			reply.status(404).send(err);
     		}else{
     			console.log(result);
+    			reply.status(200).send(result);
     		}
     	});
 		
@@ -40,15 +42,19 @@
     				agent: false
  				}
  			request(options, function(err, response, body){
- 				if(err) { console.log(err); callback(true); return; }
+ 				if(err) { 
+ 				console.log(err); 
+ 				callback("User Already Exists with this email"); 
+ 				return; 
+ 				}
 //         				obj = JSON.parse(body);
-console.log("line 45",body);
+// 					console.log("line 45",body);
         				callback(false, body);
  			});
 		}
 		
 		function addUser(arg1, callback) {
-		console.log("Adding user",arg1);
+		console.log("Adding user");
     		if (arg1.length===0){
     			var options={
  					uri:'https://localhost:9443/api/signup/adduser',
@@ -61,12 +67,16 @@ console.log("line 45",body);
     				agent: false
  				 	}
  				request(options,function(err, response, body){
- 					if(err) { console.log(err); callback(true); return; }
+ 					if(err) { 
+ 					console.log("line 71:",err); 
+ 					callback(err); 
+ 					return; 
+ 					}
 //         					obj = JSON.parse(body);
         					callback(false, body);
  				});
     		} else {
-    		callback(null, "User Already exists with that email");
+    		callback(null, "User Already Exists with this email");
     		}
     	};
  }

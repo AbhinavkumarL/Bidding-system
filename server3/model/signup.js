@@ -26,7 +26,7 @@
 
  		var id =uuid.v1();
  		var q = "insert into users ( password, salt " 
- 			+",email, first_name, last_name, login_location"
+ 			+",email, first_name, last_name, curloginlocation"
  			+")values"
  			+"(?,?,?,?,?,?)";
  		var values = [

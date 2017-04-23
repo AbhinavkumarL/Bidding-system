@@ -46,7 +46,7 @@
  //***************************************************************
  function listitemsDb (cb){
  	
- 	var q = "select * from items order by rec_mtn_time desc";
+ 	var q = "select  i.item_id, i.item_desc , i.shelf_time, b.bid_amount , i.init_bid , i.status from items i left join  bids b on  (b.item_id, b.bid_amount) in ( select  item_id ,max(bid_amount) from bids group by item_id) where i.item_id  = b.item_id and i.status= 'available'";
  	
  	db.query(q, function(err, data){
  		if (err){

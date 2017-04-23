@@ -11,10 +11,12 @@
  const cookieParser = require('cookie-parser');
  const session = require('express-session')
  const cors = require('cors');
+ // const memcached = require('memcached');
+//  var memcached = new Memcached('localhost:8443');
  
-var app = express()
+ var app = express()
 
-app.use(session({
+ app.use(session({
   secret: 'SecureKey',
   resave: true,
   saveUninitialized: true

@@ -12,8 +12,10 @@ CREATE TABLE IF NOT EXISTS `USERS` (
   `last_name` varchar(100) ,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` enum('active','suspended') NOT NULL DEFAULT 'suspended',
-  `lastseen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `login_location` varchar(100),
+  `curlogintime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `curloginlocation` varchar(100),
+  `lastlogintime` datetime ,
+  `lastloginlocation` varchar(100),
   CONSTRAINT PK_USERID PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;
 
@@ -31,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `SESSIONS` (
   `sesskeyapi` varchar(250) NOT NULL ,
   `user_id` int(10) NOT NULL,
   CONSTRAINT PK_SESSIONID PRIMARY KEY (`sesskey`),
-  CONSTRAINT FK_USERID FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+  CONSTRAINT FK_USERID FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
 
 --
@@ -46,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `ITEMS` (
   `status` enum('available','soldout') NOT NULL DEFAULT 'available',
   `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT PK_itemId PRIMARY KEY (`item_id`),
-  CONSTRAINT FK_userid_items FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+  CONSTRAINT FK_userid_items FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
 
 --
@@ -59,8 +61,8 @@ CREATE TABLE IF NOT EXISTS `BIDS` (
   `bid_amount` decimal(6,2) NOT NULL,
   `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT PK_BIDID PRIMARY KEY (`bid_id`),
-  CONSTRAINT FK_userId_bids FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-  CONSTRAINT FK_itemid_bid FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`)
+  CONSTRAINT FK_userId_bids FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  CONSTRAINT FK_itemid_bid FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
 
 
@@ -74,6 +76,6 @@ CREATE TABLE IF NOT EXISTS `TRANSACTIONS` (
   `trans_value` decimal(6,2) NOT NULL,
   `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT PK_transId PRIMARY KEY (`trans_id`),
-  CONSTRAINT FK_bidid_trans FOREIGN KEY (`bid_id`) REFERENCES `bids`(`bid_id`),
-  CONSTRAINT FK_itmeid_trans FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`)
+  CONSTRAINT FK_bidid_trans FOREIGN KEY (`bid_id`) REFERENCES `bids`(`bid_id`) ON DELETE CASCADE,
+  CONSTRAINT FK_itmeid_trans FOREIGN KEY (`item_id`) REFERENCES `items`(`item_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_general_ci;
