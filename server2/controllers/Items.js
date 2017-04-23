@@ -45,8 +45,8 @@ function listitems(callback){
 	cache.get(function(err, res){
 		if (err) {
 			console.log("cache error:",err);
-		} else if (res && res.length != null) {
-			console.log("result from cache:",JSON.parse(res));
+		} else if (res && res.length != 0) {
+			console.log("result from cache:",res[0].body);
 		} else {
 			var options = {
 				uri:'https://localhost:9443/api/allitems',
@@ -100,10 +100,55 @@ function deleteitemsuser(itemid, callback){
 	});
 }
 //************************************************
+function searchitemsuser(desc, callback){
+	var options = {
+		uri:'https://localhost:9443/api/user/searchitems',
+ 		method :'GET',
+ 		headers:headers,
+ 		qs:{desc},
+ 		json:true,
+ 		rejectUnauthorized: false,
+    	requestCert: true,
+    	agent: false
+ 		}
+	request(options, function(err, response, body){
+ 		if(err) { 
+ 			console.log(err); 
+ 			callback(true); 
+ 			return; 
+ 		}
+			console.log("line 81",body);
+        		callback(false, body);
+	});
+}
+//************************************************
+function listitemsuser(userid, callback){
+	var options = {
+		uri:'https://localhost:9443/api/user/deleteitems',
+ 		method :'POST',
+ 		headers:headers,
+ 		qs:{userid},
+ 		json:true,
+ 		rejectUnauthorized: false,
+    	requestCert: true,
+    	agent: false
+ 		}
+	request(options, function(err, response, body){
+ 		if(err) { 
+ 			console.log(err); 
+ 			callback(true); 
+ 			return; 
+ 		}
+			console.log("line 81",body);
+        		callback(false, body);
+	});
+}
+//************************************************
 //************************************************
 exports.postitems = function(req, res){
 	var desc = req.body.desc ? req.body.desc :null;
-	var userid = req.body.userid ? req.body.userid :null;
+// 	var userid = req.body.userid ? req.body.userid :null;
+	var userid = req.session.userid ? req.session.userid :null;
 	var initbid = req.body.initbid ? req.body.initbid :null;
 	var shelftime = req.body.shelftime ? req.body.shelftime :null;
 	console.log("line 46:",desc, userid, initbid, shelftime);
@@ -138,6 +183,36 @@ exports.deleteitems = function(req, res){
 	var itemid = req.body.itemid ? req.body.itemid : null;
 	
 	deleteitemsuser(itemid, function(err, data){
+		if (err){
+			console.log(err);
+			res.status(404).send(err);
+		}
+		else {
+			console.log(null, data);
+			res.status(200).send(data);
+		}
+	})
+}
+//*************************************************
+exports.searchitems = function(req, res){
+	var desc = req.query.desc ? req.query.desc : null;
+	
+	searchitemsuser(desc, function(err, data){
+		if (err){
+			console.log(err);
+			res.status(404).send(err);
+		}
+		else {
+			console.log(null, data);
+			res.status(200).send(data);
+		}
+	})
+}
+//*************************************************
+exports.listitems = function(req, res){
+	//var desc = req.query.userid ? req.query.userid : null;
+	var userid = req.session.userid ? req.session.userid :null;
+	listuseritems(userid, function(err, data){
 		if (err){
 			console.log(err);
 			res.status(404).send(err);

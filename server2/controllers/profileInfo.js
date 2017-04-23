@@ -57,7 +57,8 @@ function editprofile(body, callback){
 //******************************************************
 //******************************************************
 exports.profileInfo = function(req, res){
-	var userid = req.query.userid ? req.query.userid :null;
+// 	var userid = req.query.userid ? req.query.userid :null;
+	var userid = req.session.userid ? req.session.userid :null;
 
 	console.log("line 50:",userid);
 	

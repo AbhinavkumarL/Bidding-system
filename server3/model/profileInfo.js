@@ -23,11 +23,11 @@ function editprofileDb(body, cb){
 	var firstname = body.firstname ? body.firstname :null;
 	var lastname = body.lastname ? body.lastname :null;
 	var email = body.email ? body.email :null;
-	var password = body.password ? body.password : null;
+// 	var password = body.password ? body.password : null;
 	var userid = body.userid ? body.userid :null;
 	
  		var id =uuid.v1();
- 		var q = "update users  set password = ?, email=?, first_name =?, last_name =?  where user_id = ?" 
+ 		var q = "update users  set  email=?, first_name =?, last_name =?  where user_id = ?" 
  			
  		var values = [
  		md5(body.password+id),

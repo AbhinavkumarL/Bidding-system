@@ -38,7 +38,8 @@ function purchaseditems(userid, callback){
 //************************************************************
 //************************************************************
 exports.purchaseorder = function(req, res){
-	var userid = req.query.userid ? (req.query.userid) : null;
+// 	var userid = req.query.userid ? (req.query.userid) : null;
+ 	var userid = req.session.userid ? req.session.userid :null;
  	
 	purchaseditems( userid, function(err, data){
 		if (err){

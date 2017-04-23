@@ -149,7 +149,8 @@ function listuserbids(userid, callback){
 //**********************************************************
 //**********************************************************
 exports.postbids = function(req, res){
-	var userid = req.body.userid ? (req.body.userid) : null;
+	var userid = req.session.userid ? req.session.userid :null;
+	//var userid = req.body.userid ? (req.body.userid) : null;
  	var itemid = req.body.itemid ? (req.body.itemid) : null;
  	var bidamount = req.body.bidamount ? (req.body.bidamount) : null;
 	
@@ -180,7 +181,8 @@ exports.autocomplete = function(req, res){
 }
 //**********************************************************
 exports.bidsonitem = function(req, res){
-	var itemid = req.query.itemid ? req.query.itemid : null;
+	//var itemid = req.query.itemid ? req.query.itemid : null;
+	var userid = req.session.userid ? req.session.userid :null;
 	
 	listbidsonitem(itemid, function(err, data){
 		if (err){
@@ -194,7 +196,8 @@ exports.bidsonitem = function(req, res){
 }
 //**********************************************************
 exports.bidstatus = function(req, res){
-	var userid = req.query.userid ? req.query.userid : null;
+	//var userid = req.query.userid ? req.query.userid : null;
+	var userid = req.session.userid ? req.session.userid :null;
 	
 	listuserbids(userid, function(err, data){
 		if (err){
