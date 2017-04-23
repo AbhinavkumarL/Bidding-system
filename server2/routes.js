@@ -40,6 +40,21 @@ var auth = function(req, res, next) {
  router.get('/allitems',c_items.allitems);
  router.post('/signup', c_signup.signup); 
  router.post('/login', c_loginout.login);
+ router.post('/logout',auth,c_loginout.logout);
+ router.post('/user/postitems', auth, c_items.postitems);
+ router.post('/user/postbids', auth, c_bids.postbids);
+ router.post('/user/bids/updatetrans', auth,c_bids.autocomplete);
+ router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
+ router.get('/user/profileInfo', auth,c_profile.profileInfo);
+ router.post('/user/deleteitems',auth, c_items.deleteitems);
+ router.post('/user/editprofile', auth,c_profile.updateprofile);
+// router.get('/user/items',auth, c_items.listuseritems);
+//  router.get('/user/searchitem',auth, c_items.searchitem);
+//  router.post('/user/deletebid',auth, c_bids.deletebids);
+ router.get('/user/userbidstatus', auth, c_bids.bidstatus);
+ router.get('/user/purchaseorder', auth, c_trans.purchaseorder);
+
+
 // 
 //  router.use(function(req, res, next) {
 //   console.log("line 36:",req.session.cookie);
@@ -75,16 +90,6 @@ var auth = function(req, res, next) {
 //   }
 // });
 // 
-router.post('/logout', c_loginout.logout);
-router.post('/user/items', auth, c_items.postitems);
-router.post('/user/bids', auth, c_bids.postbids);
-router.post('/user/bids/updatetrans', auth,c_bids.autocomplete);
-router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
-router.get('/user/profileInfo', auth,c_profile.profileInfo);
-router.post('/user/deleteitems',auth, c_items.deleteitems);
-router.post('/user/editprofile', auth,c_profile.updateprofile);
-router.get('/user/bidstatus', auth, c_bids.bidstatus);
-router.get('/user/purchaseorder', auth, c_trans.purchaseorder);
 
 //router.post('/user/transactions',c_trans.completetransaction);
 

@@ -78,7 +78,7 @@ var createSessionDb = function(userid, callback) {
 }
 //***********************************************************
 var updatelogininfoDb = function(loginlocation,userid, callback){
-	var q = 'update users set login_location = ? where user_id = ? ';
+	var q = 'update users set curloginlocation = ? where user_id = ? ';
 	var values =[
 		loginlocation,
 		userid
@@ -115,9 +115,20 @@ var killSessionDb = function(userid, callback){
 		} 
 	});
 }
-var getuseremailDb = function(bidid, callback){
-	var q = 'select user_id, email, '
+//***********************************************************
+//Last login time and location updates
+var lastlogintimelocationDb = function(userid, callback){
+	var q = 'update users set lastlogintime = curlogintime , lastloginlocation = curloginlocation where user_id ='+user_id ;
+
+	db.query(q, function(err, data){
+		if (err) {
+			console.log(err, null);
+		} else {
+			console.log(null ,data)
+		} 
+	});
 }
+
 // ***********************************************************
 // ***********************************************************
 exports.checkuser = function(req, res){
@@ -170,6 +181,13 @@ exports.killsession = function(req, res){
 		res.status(404).send("Please provide userid to logout");
 		return;
 	}
+	lastlogintimelocationDb(userid , function(err, data){
+		if (err) {
+			console.log(err, null);
+		} else {
+			console.log(null ,"Last login location and time information updated");
+		} 
+	});
 	killSessionDb(userid,function(err , data){
 		if (err){
 			res.status(404).send(err);

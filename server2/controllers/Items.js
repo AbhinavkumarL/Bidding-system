@@ -6,7 +6,9 @@
  const bodyParser = require('body-parser');
  const request = require('request');
  const async = require('async');
- 
+ const  cache = require('express-redis-cache')({
+  host: '127.0.0.1', port: 6379});
+  
  var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
   "accept-language" : "en-US,en;q=0.8",
@@ -40,23 +42,39 @@ function loaditems(desc, userid, initbid, shelftime, callback){
 
 //************************************************
 function listitems(callback){
-	var options = {
-		uri:'https://localhost:9443/api/allitems',
- 		method :'GET',
- 		headers:headers,
- 		json:true,
- 		rejectUnauthorized: false,
-    	requestCert: true,
-    	agent: false
- 		}
-	request(options, function(err, response, body){
- 		if(err) { 
- 			console.log(err); 
- 			callback(true); 
- 			return; 
- 		}
-			console.log("line 58",body);
-        		callback(false, body);
+	cache.get(function(err, res){
+		if (err) {
+			console.log("cache error:",err);
+		} else if (res && res.length != null) {
+			console.log("result from cache:",JSON.parse(res));
+		} else {
+			var options = {
+				uri:'https://localhost:9443/api/allitems',
+ 				method :'GET',
+ 				headers:headers,
+ 				json:true,
+ 				rejectUnauthorized: false,
+    			requestCert: true,
+    			agent: false
+ 				}
+			request(options, function(err, response, body){
+ 				if(err) { 
+ 					console.log(err); 
+ 					callback(true); 
+ 					return; 
+ 				} 
+ 				cache.add('all_items', JSON.stringify(body),function(err, added){
+ 					if(err){
+ 						console.log("line 58",err);
+        					callback(err, null); 	
+ 					}else{
+ 						console.log("line 58",added , body);
+        					callback(false, body); 					
+        				}
+ 				})
+					
+			});
+		}
 	});
 }
 //************************************************

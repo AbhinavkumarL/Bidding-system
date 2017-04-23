@@ -10,7 +10,7 @@
  var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
   "accept-language" : "en-US,en;q=0.8",
-  "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "accept" : "text/html,application/xhtml+xml,application/xml;",
   "accept-encoding" : "gzip,deflate",
 }
 
@@ -84,6 +84,7 @@ function verifylogin(email, password, callback) {
 }
 //***************************************************
 function updatelogininfo(loginlocation,userid, callback){
+	console.log("line 87:", loginlocation,userid);
 	var options = {
 			uri:'https://localhost:9443/api/user/updatelogininfo',
  			method :'POST',
@@ -100,7 +101,7 @@ function updatelogininfo(loginlocation,userid, callback){
  				callback(true); 
  				return; 
  			}
-				//console.log("line 102: response:",response.body);
+				console.log("line 102: response:",response.body);
         			callback(false, body);
  		})
 }
@@ -133,7 +134,8 @@ function killsession(userid, callback){
 exports.login = function(req, res) {
 var email = req.body.email ? req.body.email : null;
 var password = req.body.password ? req.body.password : null;
-var loginlocation = req.body.location ? req.body.location : null;
+var loginlocation = req.body.loginlocation ? req.body.loginlocation : null;
+var userid ;
 
 		if (!email || !password) {
 			res.send('login failed. Invalid Credentials'); 
@@ -146,20 +148,22 @@ var loginlocation = req.body.location ? req.body.location : null;
 		}else {
 			console.log("line 147:",data);
     		req.session.userid = data.userid;
-    		
-			var userid = data.userid;
-			updatelogininfo(loginlocation, userid, function(err){
+    		userid = data.userid;
+    		updatelogininfo(loginlocation, userid, function(err, data){
+    		console.log("line 152: updating login location ", loginlocation," for user id:",userid);
 				if (err){
+					console.log(err, null);
 					console.log("login Information not updated");
 				}
 				else{
+					console.log(null, data);
 					console.log("login informtaiont updated");
 				}
 			});
         		console.log("Line 100:session userid:",req.session);
-			res.status(200).send("login success! userid :"+data);
+			res.status(200).send("login success! userid :"+data.userid);
 		}
-	})
+	});
 }
 //********************************************************
 exports.logout = function(req, res){
