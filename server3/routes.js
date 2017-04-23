@@ -36,6 +36,7 @@
  router.get('/user/bidstatus',m_bids.bidstatus);
  router.get('/user/purchaseorders',m_trans.itemsuserpurchase);
  router.get('/user/highestbidonitem',m_items.highestbidonitem);
+ router.get('user/searchitems',m_items.searchitems);
 //  router.post('./user/sendmail',m_email.sendMail);
  
  

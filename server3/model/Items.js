@@ -46,7 +46,7 @@
  //***************************************************************
  function listitemsDb (cb){
  	
- 	var q = "select  i.item_id, i.item_desc , i.shelf_time, b.bid_amount , i.init_bid , i.status from items i left join  bids b on  (b.item_id, b.bid_amount) in ( select  item_id ,max(bid_amount) from bids group by item_id) where i.item_id  = b.item_id and i.status= 'available'";
+ 	var q = "select  i.item_id, i.item_desc , i.shelf_time, b.bid_amount , i.init_bid , i.status, b.bid_id from items i left join  bids b on  (b.item_id, b.bid_amount) in ( select  item_id ,max(bid_amount) from bids group by item_id) where i.item_id  = b.item_id and i.status= 'available'";
  	
  	db.query(q, function(err, data){
  		if (err){
@@ -86,6 +86,19 @@
  function highestbidonitemDb(itemid, cb){
  	
  	var q = "select * from bids b, items i where i.item_id = b.item_id and b.item_id = ? order by bid_amount desc limit 1 ";
+ 	
+ 	db.query(q, itemid, function(err, data){
+ 		if (err){
+ 			cb(err, null);
+ 		}else {
+ 			cb(null,data);
+ 		}
+ 	});
+ }
+ //***************************************************************
+ function searchitemsDb(desc, cb){
+ 	
+ 	var q = "select * from items where item_desc like '%"+desc+"%'";
  	
  	db.query(q, itemid, function(err, data){
  		if (err){
@@ -149,6 +162,21 @@
 	var itemid = req.body.itemid ? req.body.itemid : null;
 	
 		highestbidonitemDb(itemid, function(err, data){
+		if (err){
+			console.log(err);
+			res.status(404).send(err);
+		}
+		else {
+			console.log(null, data);
+			res.status(200).send(data);
+		}
+	})
+}
+//****************************************************************
+ exports.searchitems = function(req, res){
+	var desc = req.query.desc ? req.query.desc : null;
+	
+		searchitemsDb(desc, function(err, data){
 		if (err){
 			console.log(err);
 			res.status(404).send(err);

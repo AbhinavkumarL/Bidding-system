@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `ITEMS` (
   `user_id` int(10) NOT NULL,
   `init_bid` decimal(6,2) NOT NULL,
   `shelf_time` int(10),
+  `notification_status` Varchar(1) NOT NULL DEFAULT 'N',
   `status` enum('available','soldout') NOT NULL DEFAULT 'available',
   `Rec_mtn_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT PK_itemId PRIMARY KEY (`item_id`),

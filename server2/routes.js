@@ -41,57 +41,22 @@ var auth = function(req, res, next) {
  router.post('/signup', c_signup.signup); 
  router.post('/login', c_loginout.login);
  router.post('/logout',auth,c_loginout.logout);
- router.post('/user/postitems', auth, c_items.postitems);
- router.post('/user/postbids', auth, c_bids.postbids);
- router.post('/user/bids/updatetrans', auth,c_bids.autocomplete);
- router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
  router.get('/user/profileInfo', auth,c_profile.profileInfo);
- router.post('/user/deleteitems',auth, c_items.deleteitems);
  router.post('/user/editprofile', auth,c_profile.updateprofile);
-// router.get('/user/items',auth, c_items.listuseritems);
-//  router.get('/user/searchitem',auth, c_items.searchitem);
-//  router.post('/user/deletebid',auth, c_bids.deletebids);
+ 
  router.get('/user/userbidstatus', auth, c_bids.bidstatus);
+ router.post('/user/postbids', auth, c_bids.postbids);
+ router.post('/user/deletebid',auth, c_bids.deletebids);
+ //router.post('/user/bids/updatetrans', auth,c_bids.autocomplete);
+ 
+ router.get('/user/items',auth, c_items.listuseritems);
+ router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
+ router.post('/user/postitems', auth, c_items.postitems);
+ router.post('/user/deleteitems',auth, c_items.deleteitems);
+ 
  router.get('/user/purchaseorder', auth, c_trans.purchaseorder);
-
-
-// 
-//  router.use(function(req, res, next) {
-//   console.log("line 36:",req.session.cookie);
-//   
-//   var cookie = req.session.cookie;
-//   var token = req.session.cookie.token;
-//   console.log("line 37:token passed:",token);
-// 
-//   // decode token
-//   if (token) {
-//     // verifies secret and checks exp
-//     	jwt.verify(token, 'SecureKey', function(err, decoded) {     
-// 	
-//       		if (err) {
-//       		console.log(err);
-//         		return res.json({ success: false, message: 'Failed to authenticate token.' }); 
-//         		router.post('/logout',c_loginout.logout);
-//       		} else {
-//         		// if everything is good, save to request for use in other routes
-//         		req.decoded = decoded;    
-//         		next();
-//       		}
-//     	});
-// 
-//   } else {
-//     	// if there is no token
-//     	// return an error
-//     	return res.status(403).send({ 
-//         	success: false, 
-//         	message: 'No token provided.' 
-//     });
-// 
-//   }
-// });
-// 
-
-//router.post('/user/transactions',c_trans.completetransaction);
+ router.get('/user/searchitems', auth, c_items.searchitems);
+ router.post('/user/transactions',c_trans.completetransaction);
 
 // request (options , function (error, response, body) {
 // 			

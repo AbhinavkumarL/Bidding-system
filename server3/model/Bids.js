@@ -26,8 +26,8 @@
  	});
  }
  //***************************************************************
- function listbidsDb(itemid, cb) {
- 	var q = "select * from bids, items where bids.item_id = items.item_id and items.item_id = ? ";
+ function listbidsDb(userid, cb) {
+ 	var q = "select * from bids, items where bids.item_id = items.item_id and items.user_id = ? ";
  	
  	db.query(q,itemid, function(err, data){
  		if (err){
@@ -66,9 +66,9 @@
  }
  //***************************************************************
  exports.bidsonitem = function(req,res){
- 	var itemid = req.query.itemid ? (req.query.itemid) : null;
+ 	var itemid = req.query.userid ? (req.query.userid) : null;
  	
- 	listbidsDb(itemid, function(err, data){
+ 	listbidsDb(userid, function(err, data){
  		if (err){
  			res.status(404).send(err);
  		}else {
