@@ -118,7 +118,7 @@ var killSessionDb = function(userid, callback){
 //***********************************************************
 //Last login time and location updates
 var lastlogintimelocationDb = function(userid, callback){
-	var q = 'update users set lastlogintime = curlogintime , lastloginlocation = curloginlocation where user_id ='+user_id ;
+	var q = 'update users set lastlogintime = curlogintime , lastloginlocation = curloginlocation where user_id ='+userid ;
 
 	db.query(q, function(err, data){
 		if (err) {
@@ -139,6 +139,7 @@ exports.checkuser = function(req, res){
 		if (err){
 			res.status(404).send(err);
 		}else {
+			
 			res.status(200).send(data);
 		}
 	})
@@ -152,8 +153,8 @@ exports.createsession = function(req, res){
 		if (err){
 			res.status(404).send(err);
 		}else {
-			console.log("line 125: session info:",data);
-			res.status(200).send(data);
+			console.log("line 156: session info:",data);
+		res.status(200).send({"userid":data.userid,"sessionToken":data.sessionToken});
 		}
 	});
 	
@@ -167,7 +168,7 @@ exports.updatelogininfo = function(req, res){
 		if (err){
 			res.status(404).send(err);
 		}else {
-			res.status(200).send("User Logout Successfully");
+			res.status(200).send("User Locaiton updated ");
 		}
 	});
 

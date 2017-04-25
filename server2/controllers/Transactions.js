@@ -39,13 +39,41 @@ function purchaseditems(userid, callback){
 //************************************************************
 exports.purchaseorder = function(req, res){
 // 	var userid = req.query.userid ? (req.query.userid) : null;
- 	var userid = req.session.userid ? req.session.userid :null;
- 	
-	purchaseditems( userid, function(err, data){
+//  	var userid = req.session.userid ? req.session.userid :null;
+ 				
+async.waterfall([
+  	getuserid, 
+  	listbidsuser
+  ], function(err, result){
+  		if(err){
+ 			console.log("line 199",err);
+ 			res.status(404).send("cache error occured");
+ 		}else{
+ 			res.status(200).send(result);			
+        	}
+  });
+  
+  function getuserid (callback){
+  	client.get("userid",function(err, data){
+ 		if(err){
+ 			console.log("line 199",err);
+ 			callback(null);
+ 		}else{
+ 			callback(null,parseInt(data));				
+        	}
+ 	});
+  }
+  
+  function listbidsuser(arg1, callback){
+// 		console.log("line 50:",userid);
+		purchaseditems( userid, function(err, data){
 		if (err){
 			console.log(err, null);
+			callback(err, null);
 		}else {
 			console.log(null, data);
+			callback(null, data);
 		}
 	});
+	}
 }

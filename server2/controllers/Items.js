@@ -6,9 +6,10 @@
  const bodyParser = require('body-parser');
  const request = require('request');
  const async = require('async');
- const  cache = require('express-redis-cache')({
-  host: '127.0.0.1', port: 6379});
-  
+ const redis = require('redis');
+ const client = redis.createClient(6379);
+ const c_profile = require('./profileinfo.js');
+
  var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
   "accept-language" : "en-US,en;q=0.8",
@@ -17,7 +18,7 @@
 }
  
 //***************************************************
-function loaditems(desc, userid, initbid, shelftime, callback){
+function loaditems( userid, desc,initbid, shelftime, callback){
 	console.log("line 19:",desc, userid, initbid, shelftime);
 	var options = {
 		uri:'https://localhost:9443/api/user/items',
@@ -36,17 +37,19 @@ function loaditems(desc, userid, initbid, shelftime, callback){
  			return; 
  		}
 			console.log("line 37",body);
-        		callback(false, body);
+        		callback(false, {"body":body});
 	});
 }
 
 //************************************************
 function listitems(callback){
-	cache.get(function(err, res){
+	client.get('allitems', function(err, res){
 		if (err) {
 			console.log("cache error:",err);
-		} else if (res && res.length != 0) {
-			console.log("result from cache:",res[0].body);
+			callback(err, null);
+		} else if (res && res.length > 0) {
+			console.log("result from cache:",JSON.parse(res));
+			callback(null,JSON.parse(res));
 		} else {
 			var options = {
 				uri:'https://localhost:9443/api/allitems',
@@ -63,13 +66,14 @@ function listitems(callback){
  					callback(true); 
  					return; 
  				} 
- 				cache.add('all_items', JSON.stringify(body),function(err, added){
+ 				console.log("output :", body);
+ 				client.set('allitems', JSON.stringify(body),function(err, added){
  					if(err){
- 						console.log("line 58",err);
+//  						console.log("line 58",err);
         					callback(err, null); 	
  					}else{
- 						console.log("line 58",added , body);
-        					callback(false, body); 					
+//  						console.log("line 58",added , body);
+        					callback(null, {"body":body}); 					
         				}
  				})
 					
@@ -95,8 +99,8 @@ function deleteitemsuser(itemid, callback){
  			callback(true); 
  			return; 
  		}
-			console.log("line 81",body);
-        		callback(false, body);
+// 			console.log("line 81",body);
+        		callback(false, {"body":body});
 	});
 }
 //************************************************
@@ -117,8 +121,8 @@ function searchitemsuser(desc, callback){
  			callback(true); 
  			return; 
  		}
-			console.log("line 81",body);
-        		callback(false, body);
+// 			console.log("line 81",body);
+        		callback(false, {"body":body});
 	});
 }
 //************************************************
@@ -139,41 +143,65 @@ function listitemsuser(userid, callback){
  			callback(true); 
  			return; 
  		}
-			console.log("line 81",body);
-        		callback(false, body);
+// 			console.log("line 81",body);
+        		callback(false, {"body":body});
 	});
 }
 //************************************************
 //************************************************
 exports.postitems = function(req, res){
-	var desc = req.body.desc ? req.body.desc :null;
-// 	var userid = req.body.userid ? req.body.userid :null;
-	var userid = req.session.userid ? req.session.userid :null;
-	var initbid = req.body.initbid ? req.body.initbid :null;
-	var shelftime = req.body.shelftime ? req.body.shelftime :null;
-	console.log("line 46:",desc, userid, initbid, shelftime);
-	
-	loaditems( desc, userid, initbid, shelftime, function(err, data){
-		if (err){
-			console.log(err, null);
-			res.send(err);
-		}else {
-			console.log(null, data);
-			res.send(data);
-		}
-		
-	});
+var desc = req.body.desc ? req.body.desc :null;
+var initbid = req.body.initbid ? req.body.initbid :null;
+var shelftime = req.body.shelftime ? req.body.shelftime :null;
+ 
+async.waterfall([
+  	getuserid, 
+  	loadingitems
+  ], function(err, result){
+  		if(err){
+ 			console.log("line 199",err);
+ 			res.send(err);
+ 		}else{
+ 			res.send(result);
+        	}
+  });
+  
+  function getuserid (callback){
+  	client.get("userid",function(err, data){
+ 		if(err){
+ 			console.log("line 199",err);
+ 			callback(null);
+ 		}else{
+ 			console.log("line 202", parseInt(data));
+ 			callback(null,parseInt(data));				
+        	}
+ 	});
+  }
+  function loadingitems(arg1, callback){
+  var userid = arg1;
+  	loaditems(userid, desc,initbid, shelftime, function(err, data){
+			if (err){
+// 				console.log(err, null);
+				callback(err, null);
+			}else {
+// 				console.log(null, data);
+				callback(null, data);
+			}
+		});
+  	}
 }
+	
+
 //************************************************
 exports.allitems = function(req, res){
 	
-	listitems (function(err, data){
+	listitems(function(err, data){
 		if (err){
-			console.log(err);
+// 			console.log(err);
 			res.status(404).send(err);
 		}
 		else {
-			console.log(null, data);
+// 			console.log(null, data);
 			res.status(200).send(data);
 		}
 	})
@@ -211,15 +239,45 @@ exports.searchitems = function(req, res){
 //*************************************************
 exports.listitems = function(req, res){
 	//var desc = req.query.userid ? req.query.userid : null;
-	var userid = req.session.userid ? req.session.userid :null;
-	listuseritems(userid, function(err, data){
+// 	var userid = req.session.userid ? req.session.userid :null;
+
+			
+async.waterfall([
+  	getuserid, 
+  	listitemsuser
+  ], function(err, result){
+  		if(err){
+ 			console.log("line 199",err);
+ 			res.status(404).send("cache error occured");
+ 		}else{
+ 			res.status(200).send(result);			
+        	}
+  });
+  
+  function getuserid (callback){
+  	client.get("userid",function(err, data){
+ 		if(err){
+ 			console.log("line 199",err);
+ 			callback(null);
+ 		}else{
+ 			callback(null,parseInt(data));				
+        	}
+ 	});
+  }
+  
+  function listitemsuser(arg1, callback){
+// 		console.log("line 50:",userid);
+		listuseritems(userid, function(err, data){
 		if (err){
 			console.log(err);
-			res.status(404).send(err);
+			callback(err, null);
 		}
 		else {
 			console.log(null, data);
-			res.status(200).send(data);
+			callback(null, data);
 		}
 	})
+	}
 }
+
+

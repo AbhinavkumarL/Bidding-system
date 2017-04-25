@@ -9,11 +9,13 @@
  const c_items = require('./controllers/Items.js');
  const c_bids= require('./controllers/Bids.js');
  const c_trans = require('./controllers/Transactions.js');
-  const c_profile = require('./controllers/profileInfo.js')
+ const c_profile = require('./controllers/profileInfo.js');
  const jwt = require('jsonwebtoken');
  const zip = require('zlib');
- var router = express.Router();
+ const redis = require('redis');
+ const client = redis.createClient(6379); 
  
+ var router = express.Router();
  
 var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
@@ -24,40 +26,58 @@ var headers = {
   "accept-encoding" : "gzip,deflate",
 };
 
-var auth = function(req, res, next) {
-  if (req.session && req.session.userid)
-    return next();
-  else
-    return res.status(401).send("User not logged in");
-};
+router.post('/login', c_loginout.login);
+
+var auth = function(req, res, next){
+
+	client.get('session', function(err, data){
+		if (data === null){
+			console.log("44:session expired. Please login again");
+			res.status(401).send("session expired. Please login again");
+		}else{
+			return next();
+		}
+	})
+  }
+// function pickup(req, response) {
+// 	if (request.method == 'OPTIONS') {
+// 		response.setHeader('Access-Control-Allow-Origin', '*');
+// 		response.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE');
+// 		response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+// 		response.end();
+// 	}
+// 	else {
+// 		response.setHeader('Access-Control-Allow-Origin', '*');
+// 		response.setHeader('Authorization',req.session.userid);
+// 	}
+// }
+// router.use(pickup);
 
  router.use(function timeLog(req, res,next){
  	console.log("Time Log:"+Date.now());
- 	console.log(req.session);
  	next();
  });
  
  router.get('/allitems',c_items.allitems);
  router.post('/signup', c_signup.signup); 
- router.post('/login', c_loginout.login);
+
  router.post('/logout',auth,c_loginout.logout);
  router.get('/user/profileInfo', auth,c_profile.profileInfo);
  router.post('/user/editprofile', auth,c_profile.updateprofile);
  
  router.get('/user/userbidstatus', auth, c_bids.bidstatus);
  router.post('/user/postbids', auth, c_bids.postbids);
- router.post('/user/deletebid',auth, c_bids.deletebids);
- //router.post('/user/bids/updatetrans', auth,c_bids.autocomplete);
+ router.delete('/user/deletebid',auth, c_bids.deletebids);
+
  
- router.get('/user/items',auth, c_items.listuseritems);
+ //router.get('/user/items',auth, c_items.listuseritems);
  router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
  router.post('/user/postitems', auth, c_items.postitems);
- router.post('/user/deleteitems',auth, c_items.deleteitems);
+ router.delete('/user/deleteitems',auth, c_items.deleteitems);
  
  router.get('/user/purchaseorder', auth, c_trans.purchaseorder);
  router.get('/user/searchitems', auth, c_items.searchitems);
- router.post('/user/transactions',c_trans.completetransaction);
-
+ 
 // request (options , function (error, response, body) {
 // 			
 //   			if (!error && response.statusCode == 200) {

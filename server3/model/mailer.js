@@ -56,7 +56,7 @@ function sendMail(json, cb){
  */
  setInterval(function(){
 	timedoutitems()
- },60000);
+ },6000000);
 
  
 function timedoutitems() {
