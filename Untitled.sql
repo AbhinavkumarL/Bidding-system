@@ -27,4 +27,16 @@ select u.user_id userid, u.email to_eamil , t.trans_id, i.item_desc
 select * from items i , bids b
 where i.item_id = b.item_id and b.bid_id in (
 select bid_id from bids where bid_amount 
-)
+);
+
+
+
+select u.user_id, u.email from bids b, users u 
+ where item_id =4 and u.user_id = b.user_id 
+ order by b.bid_amount desc limit 1;
+ 
+ select * from bids b , items i where i.item_id= b.item_id  and i.user_id =2;
+ 
+ 
+ select * from items;
+ select * from bids where item_id in (1,2,3) ;

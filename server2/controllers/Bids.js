@@ -6,6 +6,8 @@
  const bodyParser = require('body-parser');
  const request = require('request');
  const async = require('async');
+ const redis = require('redis');
+ const client = redis.createClient(6379); 
  
  var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
@@ -32,15 +34,15 @@ function loadbids(userid, itemid, bidamount, callback){
  			callback(true); 
  			return; 
  		}
-			console.log("line 35",body);
+// 			console.log("line 35",body);
         		callback(false, body);
 	});
 }
 //*********************************************************
-function completetransactions( body, callback){
-	var bidid = body.bidid ? body.bidid :null;
-	var itemid = body.itemid ? body.itemid : null;
-	var bidamount = body.bidamount ? body.bidamount :null;
+// function completetransactions( body, callback){
+// 	var bidid = body.bidid ? body.bidid :null;
+// 	var itemid = body.itemid ? body.itemid : null;
+// 	var bidamount = body.bidamount ? body.bidamount :null;
 		
 	// async.waterfall([
 // 		getitemdetail,
@@ -59,26 +61,27 @@ function completetransactions( body, callback){
 // 	
 // 	function completepurchase(bidid, itemid, bidamount, callback){
 // 	
-		var options = {
-			uri:'https://localhost:9443/api/user/transactions',
- 			method :'POST',
- 			headers:headers,
- 			body:{bidid, itemid, bidamount},
- 			json:true,
- 			rejectUnauthorized: false,
-    		requestCert: true,
-    		agent: false
- 			}
-		request(options, function(err, response, body){
- 			if(err) { 
- 				console.log(err); 
- 				callback(true); 
- 				return; 
- 			}
-				console.log("line 58",body);
-        			callback(false, body);
-		});
-	}
+// 		var options = {
+// 			uri:'https://localhost:9443/api/user/transactions',
+//  			method :'POST',
+//  			headers:headers,
+//  			body:{bidid, itemid, bidamount},
+//  			json:true,
+//  			rejectUnauthorized: false,
+//     		requestCert: true,
+//     		agent: false
+//  			}
+// 		request(options, function(err, response, body){
+//  			if(err) { 
+//  				console.log(err); 
+//  				callback(true); 
+//  				return; 
+//  			}
+// 				console.log("line 58",body);
+//         			callback(false, body);
+// 		});
+// 	}
+// }
 	// function sendmail(email,desc callback){
 // 		var options = {
 // 			uri:'https://localhost:9443/api/user/transactions',
@@ -102,12 +105,12 @@ function completetransactions( body, callback){
 // 	}
 // }
 //*********************************************************
-function listbidsonitem(itemid, callback){
+function listbidsonitem(userid, callback){
 	var options = {
 		uri:'https://localhost:9443/api/user/bidsonitem',
  		method :'GET',
  		headers:headers,
- 		qs:{itemid},
+ 		qs:{userid},
  		json:true,
  		rejectUnauthorized: false,
     	requestCert: true,
@@ -145,26 +148,72 @@ function listuserbids(userid, callback){
         		callback(false, body);
 	});
 }
+//*********************************************************
+function deleteuserbids(bidid, callback){
+	var options = {
+		uri:'https://localhost:9443/api/user/deletebids',
+ 		method :'GET',
+ 		headers:headers,
+ 		qs:{bidid},
+ 		json:true,
+ 		rejectUnauthorized: false,
+    	requestCert: true,
+    	agent: false
+ 		}
+	request(options, function(err, response, body){
+ 		if(err) { 
+ 			console.log(err); 
+ 			callback(true); 
+ 			return; 
+ 		}
+			console.log("line 58",body);
+        		callback(false, body);
+	});
+}
+
 
 //**********************************************************
 //**********************************************************
 exports.postbids = function(req, res){
-	var userid = req.session.userid ? req.session.userid :null;
-	//var userid = req.body.userid ? (req.body.userid) : null;
- 	var itemid = req.body.itemid ? (req.body.itemid) : null;
+	var itemid = req.body.itemid ? (req.body.itemid) : null;
  	var bidamount = req.body.bidamount ? (req.body.bidamount) : null;
 	
-	loadbids( userid, itemid, bidamount, function(err, data){
-		if (err){
-			console.log(err, null);
-			res.status(404).send(err);
-		}else {
-			console.log(null, data);
-			res.status(200).send(data);
-		}
-		
-	});
+	async.waterfall([
+  	getuserid, 
+  	listbidsuser
+  ], function(err, result){
+  		if(err){
+ 			console.log("line 199",err);
+ 			res.status(404).send("cache error occured");
+ 		}else{
+ 			res.status(200).send("Bid posted Successfully");			
+        	}
+  });
+  
+  function getuserid (callback){
+  	client.get("userid",function(err, data){
+ 		if(err){
+ 			console.log("line 199",err);
+ 			callback(null);
+ 		}else{
+ 			callback(null,parseInt(data));				
+        	}
+ 	});
+  }
+  
+  function listbidsuser(arg1, callback){
+			loadbids( arg1, itemid, bidamount, function(err, data){
+			if (err){
+				console.log(err, null);
+				callback(err, null);
+			}else {
+				console.log(null, data);
+				callback(null, data);
+			}
+		});
+	}
 }
+	
 //**********************************************************
 exports.autocomplete = function(req, res){
 	var body = req.body;
@@ -182,30 +231,98 @@ exports.autocomplete = function(req, res){
 //**********************************************************
 exports.bidsonitem = function(req, res){
 	//var itemid = req.query.itemid ? req.query.itemid : null;
-	var userid = req.session.userid ? req.session.userid :null;
-	
-	listbidsonitem(itemid, function(err, data){
-		if (err){
-			console.log(err, null);
-			res.status(404).send(err);
-		}else {
-			console.log(null, data);
-			res.status(200).send(data);
-		}
-	});
+	//var userid = req.session.userid ? req.session.userid :null;
+	async.waterfall([
+  		getuserid, 
+  		userbidsonitem
+  	], function(err, result){
+  			if(err){
+ 				console.log("line 199",err);
+ 				res.status(404).send("cache error occured");
+ 			}else{
+ 				res.status(200).send(result);			
+        		}
+  	});
+  	
+  	function getuserid (callback){
+  		client.get("userid",function(err, data){
+ 			if(err){
+ 				console.log("line 199",err);
+ 				callback(null);
+ 			}else{
+ 				callback(null,parseInt(data));				
+        		}
+ 		});
+  	}
+  	
+  	function userbidsonitem(arg1, callback){
+	// 		console.log("line 50:",userid);
+			listbidsonitem(arg1, function(err, data){
+			if (err){
+				console.log(err, null);
+				callback(err, null);
+			}else {
+				console.log(null, data);
+				callback(null, data);
+			}
+		});
+	}
 }
+	
 //**********************************************************
 exports.bidstatus = function(req, res){
 	//var userid = req.query.userid ? req.query.userid : null;
-	var userid = req.session.userid ? req.session.userid :null;
-	
-	listuserbids(userid, function(err, data){
+// 	var userid = req.session.userid ? req.session.userid :null;
+			
+async.waterfall([
+  	getuserid, 
+  	listbidsuser
+  ], function(err, result){
+  		if(err){
+ 			console.log("line 199",err);
+ 			res.status(404).send("cache error occured");
+ 		}else{
+ 			res.status(200).send(result);			
+        	}
+  });
+  
+  function getuserid (callback){
+  	client.get("userid",function(err, data){
+ 		if(err){
+ 			console.log("line 199",err);
+ 			callback(null);
+ 		}else{
+ 			callback(null,parseInt(data));				
+        	}
+ 	});
+  }
+  
+  function listbidsuser(arg1, callback){
+// 		console.log("line 50:",userid);
+		listuserbids(arg1, function(err, data){
 		if (err){
 			console.log(err, null);
-			res.status(404).send(err);
+			callback(err, null);
 		}else {
 			console.log(null, data);
-			res.status(200).send(data);
+			callback(null, data);
 		}
 	});
+	}
+}
+
+
+//**********************************************************
+exports.deletebids = function(req, res){
+	var bidid = req.query.bidid ? req.query.bidid : null;		
+		deleteuserbids(bidid, function(err, data){
+		if (err){
+			console.log(err, null);
+			callback(err, null);
+		}else {
+			console.log(null, data);
+			callback(null, data);
+		}
+	});
+	}
 }

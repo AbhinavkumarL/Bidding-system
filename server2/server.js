@@ -20,11 +20,7 @@
   secret: 'SecureKey',
   resave: true,
   saveUninitialized: true
-  // cookie: { expires: '1h',
-// 				originalMaxAge : 3600000,
-// 				httpOnly: true,
-// 				secure :true }
-}));
+ }));
 // var allowCrossDomain = function(req, res, next) {
 //     res.header('Access-Control-Allow-Origin', 'example.com');
 //     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -35,6 +31,7 @@
 //  app.use(allowCrossDomain);
  app.use(bodyParser.json());
  app.use(cors());
+ 
  
 var options = {
    key  : fs.readFileSync('./server2/server.key'),

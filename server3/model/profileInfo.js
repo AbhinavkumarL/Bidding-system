@@ -6,7 +6,7 @@
  const md5 = require('md5');
 //******************************************************
 function profileInfoDb(userid, cb){
-	var q = 'select user_id, email, first_name, last_name,date_added, status, lastseen, login_location from users where user_id = ?'; 
+	var q = 'select user_id, email, first_name, last_name,date_added, status, lastlogintime, lastloginlocation from users where user_id = ?'; 
 
 	db.query(q, userid, function(err,data){
 		if(err){
@@ -19,18 +19,16 @@ function profileInfoDb(userid, cb){
 	});
 }
 //******************************************************
-function editprofileDb(body, cb){
+function editprofileDb(body, callback){
 	var firstname = body.firstname ? body.firstname :null;
 	var lastname = body.lastname ? body.lastname :null;
 	var email = body.email ? body.email :null;
-// 	var password = body.password ? body.password : null;
 	var userid = body.userid ? body.userid :null;
 	
  		var id =uuid.v1();
  		var q = "update users  set  email=?, first_name =?, last_name =?  where user_id = ?" 
  			
  		var values = [
- 		md5(body.password+id),
  		body.email,
  		body.firstname,
  		body.lastname,
@@ -67,12 +65,12 @@ var userid = req.query.userid ? req.query.userid :null;
 //******************************************************
 exports.updateprofile = function(req, res){
 	var body = req.body;
-	var email = req.body.email ? req.body.email :null;
-	var password = req.body.password ? req.body.password : null;
-	
-	if (email ===null || password ===null){
-		res.status(500).send("email or password can not be NULL");
-	}
+	// var email = req.body.email ? req.body.email :null;
+// 	var password = req.body.password ? req.body.password : null;
+// 	
+// 	if (email ===null || password ===null){
+// 		res.status(500).send("email or password can not be NULL");
+// 	}
 	
 	
 	editprofileDb(body,function(err,data){

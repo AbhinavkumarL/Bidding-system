@@ -29,7 +29,7 @@
  function listbidsDb(userid, cb) {
  	var q = "select * from bids, items where bids.item_id = items.item_id and items.user_id = ? ";
  	
- 	db.query(q,itemid, function(err, data){
+ 	db.query(q,userid, function(err, data){
  		if (err){
  			cb(err, null);
  		}else {
@@ -66,7 +66,7 @@
  }
  //***************************************************************
  exports.bidsonitem = function(req,res){
- 	var itemid = req.query.userid ? (req.query.userid) : null;
+ 	var userid = req.query.userid ? (req.query.userid) : null;
  	
  	listbidsDb(userid, function(err, data){
  		if (err){

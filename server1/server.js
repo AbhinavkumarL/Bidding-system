@@ -8,9 +8,16 @@
  const express = require('express');
  const bodyParser = require('body-parser');
  const routes = require('./routes.js');
+ const session = require('express-session')
 
  var app = express();
  app.use(bodyParser.json());
+ 
+ app.use(session({
+  secret: 'SecureKey',
+  resave: true,
+  saveUninitialized: true
+  }));
  
 var options = {
    key  : fs.readFileSync('./server1/server.key'),
