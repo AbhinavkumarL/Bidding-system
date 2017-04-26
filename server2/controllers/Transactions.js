@@ -5,6 +5,8 @@
  const bodyParser = require('body-parser');
  const request = require('request');
  const async = require('async');
+ const redis = require('redis');
+ const client = redis.createClient(6379); 
  
  var headers = {
   "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
@@ -43,7 +45,7 @@ exports.purchaseorder = function(req, res){
  				
 async.waterfall([
   	getuserid, 
-  	listbidsuser
+  	itemspurchased
   ], function(err, result){
   		if(err){
  			console.log("line 199",err);
@@ -64,9 +66,9 @@ async.waterfall([
  	});
   }
   
-  function listbidsuser(arg1, callback){
+  function itemspurchased(arg1, callback){
 // 		console.log("line 50:",userid);
-		purchaseditems( userid, function(err, data){
+		purchaseditems( arg1, function(err, data){
 		if (err){
 			console.log(err, null);
 			callback(err, null);

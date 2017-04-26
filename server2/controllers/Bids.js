@@ -152,9 +152,9 @@ function listuserbids(userid, callback){
 function deleteuserbids(bidid, callback){
 	var options = {
 		uri:'https://localhost:9443/api/user/deletebids',
- 		method :'GET',
+ 		method :'DELETE',
  		headers:headers,
- 		qs:{bidid},
+ 		body:{bidid},
  		json:true,
  		rejectUnauthorized: false,
     	requestCert: true,
@@ -314,15 +314,14 @@ async.waterfall([
 
 //**********************************************************
 exports.deletebids = function(req, res){
-	var bidid = req.query.bidid ? req.query.bidid : null;		
-		deleteuserbids(bidid, function(err, data){
+	var bidid = req.body.bidid ? req.body.bidid : null;
+	deleteuserbids(bidid, function(err, data){
 		if (err){
 			console.log(err, null);
-			callback(err, null);
+			res.status(401).send(err);
 		}else {
 			console.log(null, data);
-			callback(null, data);
+			res.status(200).send(data);
 		}
 	});
 	}
-}

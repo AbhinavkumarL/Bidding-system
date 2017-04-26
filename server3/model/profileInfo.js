@@ -65,13 +65,6 @@ var userid = req.query.userid ? req.query.userid :null;
 //******************************************************
 exports.updateprofile = function(req, res){
 	var body = req.body;
-	// var email = req.body.email ? req.body.email :null;
-// 	var password = req.body.password ? req.body.password : null;
-// 	
-// 	if (email ===null || password ===null){
-// 		res.status(500).send("email or password can not be NULL");
-// 	}
-	
 	
 	editprofileDb(body,function(err,data){
 		if(err){

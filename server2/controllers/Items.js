@@ -37,7 +37,7 @@ function loaditems( userid, desc,initbid, shelftime, callback){
  			return; 
  		}
 			console.log("line 37",body);
-        		callback(false, {"body":body});
+        		callback(false, body);
 	});
 }
 
@@ -73,7 +73,7 @@ function listitems(callback){
         					callback(err, null); 	
  					}else{
 //  						console.log("line 58",added , body);
-        					callback(null, {"body":body}); 					
+        					callback(null, body); 					
         				}
  				})
 					
@@ -100,7 +100,7 @@ function deleteitemsuser(itemid, callback){
  			return; 
  		}
 // 			console.log("line 81",body);
-        		callback(false, {"body":body});
+        		callback(false, body);
 	});
 }
 //************************************************
@@ -122,14 +122,14 @@ function searchitemsuser(desc, callback){
  			return; 
  		}
 // 			console.log("line 81",body);
-        		callback(false, {"body":body});
+        		callback(false, body);
 	});
 }
 //************************************************
-function listitemsuser(userid, callback){
+function listuseritems(userid, callback){
 	var options = {
-		uri:'https://localhost:9443/api/user/deleteitems',
- 		method :'POST',
+		uri:'https://localhost:9443/api/user/useritems',
+ 		method :'GET',
  		headers:headers,
  		qs:{userid},
  		json:true,
@@ -144,7 +144,7 @@ function listitemsuser(userid, callback){
  			return; 
  		}
 // 			console.log("line 81",body);
-        		callback(false, {"body":body});
+        		callback(false, body);
 	});
 }
 //************************************************
@@ -153,6 +153,14 @@ exports.postitems = function(req, res){
 var desc = req.body.desc ? req.body.desc :null;
 var initbid = req.body.initbid ? req.body.initbid :null;
 var shelftime = req.body.shelftime ? req.body.shelftime :null;
+
+client.del("allitems", function(err, res){
+	if (err){
+		console.log("allitems in cache is not in sync");
+	}else{
+		console.log("all items in cache is consistent");
+	}
+});
  
 async.waterfall([
   	getuserid, 
@@ -237,7 +245,7 @@ exports.searchitems = function(req, res){
 	})
 }
 //*************************************************
-exports.listitems = function(req, res){
+exports.useritems = function(req, res){
 	//var desc = req.query.userid ? req.query.userid : null;
 // 	var userid = req.session.userid ? req.session.userid :null;
 
@@ -266,8 +274,7 @@ async.waterfall([
   }
   
   function listitemsuser(arg1, callback){
-// 		console.log("line 50:",userid);
-		listuseritems(userid, function(err, data){
+		listuseritems(arg1, function(err, data){
 		if (err){
 			console.log(err);
 			callback(err, null);

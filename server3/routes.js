@@ -17,11 +17,12 @@
  	console.log("Time Log:"+Date.now());
  	next();
  });
+ 
  router.get ('/allitems',m_items.allitems);
  router.post('/signup/verifyuser', m_signup.verifyuser); 
  router.post('/signup/adduser', m_signup.adduser);
  
- router.post('/login/checkcredentials', m_loginout.checkuser);
+ router.post('/login/checkcredentials',m_loginout.checkuser);
  router.post('/login/createsession',m_loginout.createsession);
   router.post('/user/updatelogininfo',m_loginout.updatelogininfo);
   
@@ -31,17 +32,18 @@
  router.post('/user/updateprofile',m_profile.updateprofile);
 
  router.post('/user/items',m_items.registeritems);
- router.get('/user/bidsonitem',m_bids.bidsonitem);
- router.post('/user/deleteitems', m_items.deleteitems);
- 
+ router.delete('/user/deleteitems', m_items.deleteitems);
+ router.get('/user/searchitems',m_items.searchitems);
  router.get('/user/highestbidonitem',m_items.highestbidonitem);
+ router.get('/user/useritems', m_items.listuseritems);
+ 
+ router.get('/user/bidsonitem',m_bids.bidsonitem);
  router.post('/user/bids',m_bids.registerbids);
  router.get('/user/bidstatus',m_bids.bidstatus);
+ router.delete('/user/deletebids',m_bids.deletebids);
  
- router.get('/user/purchaseorders',m_trans.itemsuserpurchase);
- router.get('user/searchitems',m_items.searchitems);
-  router.post('/user/transactions',m_trans.registertransactions);
-//  router.post('./user/sendmail',m_email.sendMail);
- 
- 
+ router.get('/user/purchaseorder',m_trans.itemsuserpurchase);
+
+ router.post('/user/transactions',m_trans.registertransactions);
+
  module.exports = router;
