@@ -25,6 +25,7 @@
  		}
  	});
  }
+ 
  //***************************************************************
  function listbidsDb(userid, cb) {
  	var q = "select * from bids, items where bids.item_id = items.item_id and items.user_id = ? ";
@@ -40,6 +41,18 @@
  //***************************************************************
  function listuserbids(userid, cb) {
  	var q = "select * from bids, items where bids.item_id = items.item_id and bids.user_id =" +userid;
+ 	
+ 	db.query(q, function(err, data){
+ 		if (err){
+ 			cb(err, null);
+ 		}else {
+ 			cb(null,data);
+ 		}
+ 	});
+ }
+  //***************************************************************
+ function deletebidsDb(bidid, cb) {
+ 	var q = "delete from bids where bid_id ="+bidid;
  	
  	db.query(q, function(err, data){
  		if (err){
@@ -87,6 +100,22 @@
  			res.status(200).send(data);
  		}
  	});
+ }
+ //***************************************************************
+ exports.deletebids = function(req,res){
+ 	var bidid = req.body.bidid ? req.body.bidid : null;
+	
+		deletebidsDb(bidid, function(err, data){
+			if (err){
+				console.log(err);
+				res.status(404).send(err);
+			}
+			else {
+				console.log(null, data);
+				res.status(200).send(data);
+			}
+		});
+
  }
 
  

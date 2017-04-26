@@ -70,7 +70,7 @@ var auth = function(req, res, next){
  router.delete('/user/deletebid',auth, c_bids.deletebids);
 
  
- //router.get('/user/items',auth, c_items.listuseritems);
+ router.get('/user/useritems',auth, c_items.useritems);
  router.get('/user/bidsonitem', auth,c_bids.bidsonitem);
  router.post('/user/postitems', auth, c_items.postitems);
  router.delete('/user/deleteitems',auth, c_items.deleteitems);

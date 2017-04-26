@@ -73,12 +73,21 @@ function timedoutitems() {
     			 id.user_id,
     			 id.item_desc
     			]
+    			
 //     			console.log("values passed:", values);
     			mailer(values, function(err, data){
     				if (err){
 							callback(err, null);
 					}else {
-							callback(null, data);
+						var q = "update items set notification_status ='Y' where item_id = "+values.item_id;
+						db.query(q,function(err, res){
+							if (err){
+								console.log("Notification status not updated");
+							}else{
+								console.log("Notification status is updated");
+							}
+						});
+						callback(null, data);
 					}
     			});
     		});
