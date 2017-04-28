@@ -169,30 +169,30 @@ var userid ;
     		userid = data.userid;
     		updatelogininfo(loginlocation, userid, function(err, data){
 				if (err){
-					console.log(err, null);
+// 					console.log(err, null);
 					console.log("login Information not updated");
 				}
 				else{
-					console.log(null, data);
+// 					console.log(null, data);
 					console.log("login informtaiont updated");
 				}
 			});
-		client.set("session", JSON.stringify(data.sessionToken),function(err, added){
-		console.log("session cached");
- 					if(err){
- 						console.log("line 170",err);
- 					}else{
- 						console.log("line 173", added);					
-        				}
- 				});
- 		client.set("userid", JSON.stringify(data.userid),function(err, added){
- 					if(err){
- 						console.log("line 58",err);
- 					}else{
- 						console.log("line 58", added);					
-        				}
- 				});
-		res.status(200).send({"userid":data.userid,"sessionToken":data.sessionToken});
+			client.set("session", JSON.stringify(data.sessionToken),function(err, added){
+			console.log("session cached");
+ 						if(err){
+ 							console.log("line 170",err);
+ 						}else{
+ 							console.log("line 173", added);					
+        					}
+ 					});
+ 			client.set("userid", JSON.stringify(data.userid),function(err, added){
+ 						if(err){
+ 							console.log("line 58",err);
+ 						}else{
+ 							console.log("line 58", added);					
+        					}
+ 					});
+	res.status(200).send({"userid":data.userid,"sessionToken":data.sessionToken});
 		}
 	});
 }

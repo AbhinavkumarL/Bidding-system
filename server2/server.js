@@ -13,16 +13,23 @@
  const compression = require('compression');
 
  var app = express()
-
+//  app.use(compression({filter:shouldCompress}));
+app.use(compression({threshold:0}));
  app.use(bodyParser.json());
  app.use(cors());
+ 
+ // function shouldCompress(req, res){
+//  	res.setHeader('Content-Type', 'text/html');
+//  	res.setHeader('Content-Encoding', 'gzip');
+//  	return compression.filter(req, res);
+//  }
  
 var options = {
    key  : fs.readFileSync('./server2/server.key'),
    cert : fs.readFileSync('./server2/server.crt')
 };
 
- app.use(compression());
+ 
  app.use('/api',routes);
  
  https.createServer(options,app).listen(8443, function(){
