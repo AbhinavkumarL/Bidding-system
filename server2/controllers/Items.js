@@ -9,6 +9,7 @@
  const redis = require('redis');
  const client = redis.createClient(6379);
  const c_profile = require('./profileinfo.js');
+ const zlib = require('zlib');
 
 //***************************************************
 function loaditems( userid, desc,initbid, shelftime, callback){
@@ -56,6 +57,7 @@ function listitems(callback){
     			agent: false
  				}
 			request(options, function(err, response, body){
+// 			console.log(response);
  				if(err) { 
  					console.log("error in bids:line 60",err);
  					callback(true); 
@@ -201,6 +203,28 @@ exports.allitems = function(req, res){
 			res.status(404).send(err);
 		}
 		else {
+		var dummy = 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
+		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf';
+		data.dummy = dummy;
+			// var result = zlib.gzip(data, function(_, resp){
+// 				//res.end(resp);
+// 				res.status(200).send(resp);
+// 			})
 			res.status(200).send(data);
 		}
 	})
