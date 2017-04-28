@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>Bid Items - Go Online</title>
+		<title>My Item Bids - Go Online</title>
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -44,38 +44,32 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script>
 		
-			$(document).on("click", ".mybid", function(){
+			$(document).on("click", ".deleteitem", function(){
 				var $row = $(this).closest("tr"),
 					$tds = $row.find("td:nth-child(1)"),
-					$item_id = $tds.text(),
-					$tds = $row.find("td:nth-child(5)"),
-					$bidprice = $(this).closest("tr").find('input.bidprice').val();
+					$item_id = $tds.text();
 				
 				console.log($item_id);
-				console.log($bidprice);
 				
 				var body = {
-					"userid": $item_id,
-                    "itemid": $item_id,
-                    "bidamount": $bidprice
+                    "itemid": $item_id
                 }
 				console.log(body);
                 
 				$.ajax({
-                    type: 'POST',
-                    url: 'https://localhost:8443/api/user/bids',
-                    data: body,
-                    dataType: 'json',
-                    success: function(data) {
-						console.log(data);
-                        alert("Successfully added bid");
-                    },
-                    error: function(data) {
-                        var $label = $("<label>").text(JSON.parse(data.responseText).message);
-                        $('#result').empty();
-                        $('#result').append($label);
-                    }
-                });
+                    type: "DELETE",
+                    url: "https://localhost:8443/api/user/deleteitems",
+                    crossDomain: true,
+                    headers :{ 'Authorization':'SecureConnection' },
+					contentType: "application/json; charset=utf-8",
+					data: JSON.stringify(body),
+					}).done(function ( data ) {
+							console.log("Success: "+JSON.stringify(data));
+							alert("Successfully deleted!");
+					}).fail(function ( data ) {
+						   console.log("Error: "+JSON.stringify(data));
+						   alert("Error!");
+					});
 			});
 		</script>
 		
@@ -118,7 +112,7 @@
 								<i class="ace-icon fa fa-caret-down"></i>
 							</a>
 
-							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close user-logout">
 
 								<li>
 									<a href="profile.html">
@@ -130,7 +124,7 @@
 								<li class="divider"></li>
 
 								<li>
-									<a href="#">
+									<a id="logout" href="#">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
 									</a>
@@ -155,7 +149,7 @@
 
 				<ul class="nav nav-list">
 					<li>
-						<a href="index.html">
+						<a href="https://localhost:8000/api/dashboard">
 							<i class="menu-icon fa fa-tachometer"></i>
 							<span class="menu-text"> Dashboard </span>
 						</a>
@@ -164,33 +158,65 @@
 					</li>
 					
 					<li>
-						<a href="index.html">
-							<i class="menu-icon fa fa-check-square-o"></i>
-							<span class="menu-text"> Post Items</span>
-						</a>
-					</li>
-					
-					<li class="active">
-						<a href="index.html">
-							<i class="menu-icon fa  fa-exchange"></i>
-							<span class="menu-text"> Bid Items </span>
-						</a>
-					</li>
-					
-					<li>
-						<a href="index.html">
+						<a href="https://localhost:8000/api/search">
 							<i class="menu-icon fa  fa-laptop"></i>
 							<span class="menu-text"> Search Items </span>
 						</a>
 					</li>
 					
 					<li>
-						<a href="index.html">
-							<i class="menu-icon fa fa-bar-chart-o"></i>
-							<span class="menu-text"> My Activity </span>
+						<a href="https://localhost:8000/api/postitems">
+							<i class="menu-icon fa fa-check-square-o"></i>
+							<span class="menu-text"> Post Items</span>
 						</a>
 					</li>
+					
+					<li class="active">
+						<a href="https://localhost:8000/api/myitembids">
+							<i class="menu-icon fa  fa-exchange"></i>
+							<span class="menu-text"> My Item Bids </span>
+						</a>
+					</li>
+					
+					<li class="">
+						<a href="#" class="dropdown-toggle">
+							<i class="menu-icon fa fa-list"></i>
+							<span class="menu-text"> My Activity </span>
 
+							<b class="arrow fa fa-angle-down"></b>
+						</a>
+
+						<b class="arrow"></b>
+
+						<ul class="submenu">
+							<li class="">
+								<a href="https://localhost:8000/api/myitems">
+									<i class="menu-icon fa fa-caret-right"></i>
+									My Items
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+
+							<li class="">
+								<a href="https://localhost:8000/api/mybids">
+									<i class="menu-icon fa fa-caret-right"></i>
+									My Bids
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+							
+							<li class="">
+								<a href="https://localhost:8000/api/mypo">
+									<i class="menu-icon fa fa-caret-right"></i>
+									My Purchases
+								</a>
+
+								<b class="arrow"></b>
+							</li>
+						</ul>
+					</li>
 					
 				</ul><!-- /.nav-list -->
 
@@ -205,9 +231,9 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="ace-icon fa fa-home home-icon"></i>
-								<a href="#">Home</a>
+								<a href="https://localhost:8000/api/dashboard">Home</a>
 							</li>
-							<li class="active">Dashboard</li>
+							<li class="active">My Item Bids</li>
 						</ul><!-- /.breadcrumb -->
 					</div>
 
@@ -215,10 +241,10 @@
 
 						<div class="page-header">
 							<h1>
-								Bid Items
+								My Item Bids
 								<small>
 									<i class="ace-icon fa fa-angle-double-right"></i>
-									Status overview
+									Bids on items you posted to sell
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -226,48 +252,37 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<!-- Begin Table -->
-
-								<div class="row">
-									<div class="col-xs-12">
-
-										<div class="table-header">
-											Items Status
-										</div>
-
-										<!-- div.table-responsive -->
-
-										<!-- div.dataTables_borderWrap -->
-										<div>
-											<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-												<thead>
-													<tr>
-														<th>Item Id</th>
-														<th>Name</th>
-														<th class="hidden-480">Price ($)</th>
-														<th>
-															<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
-															On-Shelf Time
-														</th>
-														<th>Your Bid</th>
-														<th>Action</th>
-													</tr>
-												</thead>
-												<tbody id ="test">
-													
-												
-												</tbody>
-											</table>
-										</div>
-									</div>
+								<div class="table-header">
+									Item Bids Status
 								</div>
-								
-								<div id="errorresult"></div>
-								
-								<!--End table -->
-								
-								
+
+								<!-- div.dataTables_borderWrap -->
+								<div>
+									<table class="table table-striped table-bordered table-hover dynamic-table">
+										<thead>
+											<tr>
+												<th>Item Id</th>
+												<th>Item Description</th>
+												<th>Bid Id</th>
+												<th class="hidden-480"> Bid Value ($)</th>
+												<th>
+													<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+													Bid Posted Time
+												</th>
+												<th>Item Status</th>
+											</tr>
+										</thead>
+										<tbody id ="useritems">
+											
+										
+										</tbody>
+									</table>
+								<div>
+							</div>
+						</div>	
+						
 					</div><!-- /.page-content -->
+					
 				</div>
 			</div><!-- /.main-content -->
 
@@ -320,53 +335,45 @@
 		
 		<script type="text/javascript">
 		$( document ).ready(function() {
-			
-			
+			// Get Posted Items
 			jQuery(function($) {
 				//initiate dataTables plugin
-				
-				
 				$.ajax({
-                    type: 'GET',
-                    url: 'https://localhost:8443/api/allitems',
-
+                    type: "GET",
+                    url: "https://localhost:8443/api/user/bidsonitem",
+					crossDomain: true,
+					headers :{ 'Authorization':'SecureConnection' },
                     success: function(data) {
 					var tdata="";
 
 						var c = 1;
 						$.each(data, function (i, item) {
-								
+							var date_time = new Date(Date.parse(item.Rec_mtn_time));
 							tdata+=	"<tr>"
 							+				"<td>" + item.item_id + "</td>"
 							+				"<td>" + item.item_desc + "</td>"
-							+				"<td>"+  item.init_bid  +"</td>"
-							+				"<td>"+ item.shelf_time +"</td>"
-							+				"<td><input type=\"text\" class=\"col-xs-4 bidprice\" name=\"bidprice[]\"></td>"
-							+				"<td>"
-							+					"<button type=\"button\" class=\"btn btn-success mybid\">Bid</button>"
-							+				"</td>"
+							+				"<td>"+  item.bid_id  +"</td>"
+							+				"<td>"+ item.bid_amount +"</td>"
+							+				"<td>"+ date_time +"</td>"
+							+				"<td>"+ item.status +"</td>"
 							+			"</tr>";
 							
 							 c += 1;
 						});
 					
-					$("#test").append(tdata);
+					$("#useritems").append(tdata);
 					
 					},
 					error: function(data) {
 						//var $label = $("<label>").text(JSON.parse(data.responseText).message);
-						$('#errorresult').empty();
-						$('#test').empty();
-						$('#errorresult').append($label);
+				
 					}
 				}).done(function() {
 				
-					$('#dynamic-table').DataTable( {
+					$('.dynamic-table').DataTable( {
 						bAutoWidth: false,
 						"aoColumns": [
-						  null, null,null, null, 
-						  { "bSortable": false },
-						  { "bSortable": false }
+						  null, null,null, null, null, null
 						],
 						"aaSorting": [],
 				
@@ -377,12 +384,32 @@
 			
 				});
 			});
-		
-		});
+			// End of get posted items
 			
+		});
+		
+		//Log Out
+		$('.user-logout').on('click','#logout',function(e) {
+			e.preventDefault();
+
+			$.ajax({
+				
+				type: "POST",
+				url: "https://localhost:8443/api/logout",
+				crossDomain: true,
+				headers :{ 'Authorization':'SecureConnection' },
+				contentType: "application/json; charset=utf-8",
+			}).done(function ( data ) {
+					console.log("Success: "+JSON.stringify(data));
+					window.location.href = "https://localhost:8000/api/login";
+			}).fail(function ( data ) {
+				   console.log("Error: "+JSON.stringify(data));
+			});
+				
+		});
+		//End of Logout
+		
 		</script>
-		
-		
 		
 		
 	</body>

@@ -10,20 +10,14 @@
  const client = redis.createClient(6379);
  const c_profile = require('./profileinfo.js');
 
- var headers = {
-  "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
-  "accept-language" : "en-US,en;q=0.8",
-  "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-  "accept-encoding" : "gzip,deflate",
-}
- 
 //***************************************************
 function loaditems( userid, desc,initbid, shelftime, callback){
-	console.log("line 19:",desc, userid, initbid, shelftime);
 	var options = {
 		uri:'https://localhost:9443/api/user/items',
  		method :'POST',
- 		headers:headers,
+ 		headers:{
+ 				'Authorization':'SecureConnection'
+ 				},
  		body:{desc, userid, initbid, shelftime},
  		json:true,
  		rejectUnauthorized: false,
@@ -32,11 +26,10 @@ function loaditems( userid, desc,initbid, shelftime, callback){
  		}
 	request(options, function(err, response, body){
  		if(err) { 
- 			console.log(err); 
+ 			console.log("error in items:line 29",err);
  			callback(true); 
  			return; 
  		}
-			console.log("line 37",body);
         		callback(false, body);
 	});
 }
@@ -45,7 +38,7 @@ function loaditems( userid, desc,initbid, shelftime, callback){
 function listitems(callback){
 	client.get('allitems', function(err, res){
 		if (err) {
-			console.log("cache error:",err);
+			console.log("cache error items:line 41",err);
 			callback(err, null);
 		} else if (res && res.length > 0) {
 			console.log("result from cache:",JSON.parse(res));
@@ -54,7 +47,9 @@ function listitems(callback){
 			var options = {
 				uri:'https://localhost:9443/api/allitems',
  				method :'GET',
- 				headers:headers,
+ 				headers:{
+ 				'Authorization':'SecureConnection'
+ 				},
  				json:true,
  				rejectUnauthorized: false,
     			requestCert: true,
@@ -62,21 +57,19 @@ function listitems(callback){
  				}
 			request(options, function(err, response, body){
  				if(err) { 
- 					console.log(err); 
+ 					console.log("error in bids:line 60",err);
  					callback(true); 
  					return; 
  				} 
- 				console.log("output :", body);
+ 				console.log("output from Database:", body);
  				client.set('allitems', JSON.stringify(body),function(err, added){
  					if(err){
-//  						console.log("line 58",err);
-        					callback(err, null); 	
+        					console.log("error with cache in items : line 66", err);	
  					}else{
-//  						console.log("line 58",added , body);
-        					callback(null, body); 					
+        					console.log("updated all items cached",body); 	
         				}
  				})
-					
+ 				callback(null, body);
 			});
 		}
 	});
@@ -85,8 +78,10 @@ function listitems(callback){
 function deleteitemsuser(itemid, callback){
 	var options = {
 		uri:'https://localhost:9443/api/user/deleteitems',
- 		method :'POST',
- 		headers:headers,
+ 		method :'DELETE',
+ 		headers:{
+ 				'Authorization':'SecureConnection'
+ 				},
  		body:{itemid},
  		json:true,
  		rejectUnauthorized: false,
@@ -95,11 +90,10 @@ function deleteitemsuser(itemid, callback){
  		}
 	request(options, function(err, response, body){
  		if(err) { 
- 			console.log(err); 
+ 			console.log("error in items: line  93",err); 
  			callback(true); 
  			return; 
  		}
-// 			console.log("line 81",body);
         		callback(false, body);
 	});
 }
@@ -108,7 +102,9 @@ function searchitemsuser(desc, callback){
 	var options = {
 		uri:'https://localhost:9443/api/user/searchitems',
  		method :'GET',
- 		headers:headers,
+ 		headers:{
+ 				'Authorization':'SecureConnection'
+ 				},
  		qs:{desc},
  		json:true,
  		rejectUnauthorized: false,
@@ -117,11 +113,10 @@ function searchitemsuser(desc, callback){
  		}
 	request(options, function(err, response, body){
  		if(err) { 
- 			console.log(err); 
+ 			console.log("error in items: line  116",err); 
  			callback(true); 
  			return; 
  		}
-// 			console.log("line 81",body);
         		callback(false, body);
 	});
 }
@@ -130,7 +125,9 @@ function listuseritems(userid, callback){
 	var options = {
 		uri:'https://localhost:9443/api/user/useritems',
  		method :'GET',
- 		headers:headers,
+ 		headers:{
+ 				'Authorization':'SecureConnection'
+ 				},
  		qs:{userid},
  		json:true,
  		rejectUnauthorized: false,
@@ -139,11 +136,10 @@ function listuseritems(userid, callback){
  		}
 	request(options, function(err, response, body){
  		if(err) { 
- 			console.log(err); 
+ 			console.log("error in items: line  139",err); 
  			callback(true); 
  			return; 
  		}
-// 			console.log("line 81",body);
         		callback(false, body);
 	});
 }
@@ -167,7 +163,7 @@ async.waterfall([
   	loadingitems
   ], function(err, result){
   		if(err){
- 			console.log("line 199",err);
+ 			console.log("error in items:line 166",err);
  			res.send(err);
  		}else{
  			res.send(result);
@@ -177,10 +173,9 @@ async.waterfall([
   function getuserid (callback){
   	client.get("userid",function(err, data){
  		if(err){
- 			console.log("line 199",err);
+ 			console.log("error in items:line 176",err);
  			callback(null);
  		}else{
- 			console.log("line 202", parseInt(data));
  			callback(null,parseInt(data));				
         	}
  	});
@@ -189,10 +184,8 @@ async.waterfall([
   var userid = arg1;
   	loaditems(userid, desc,initbid, shelftime, function(err, data){
 			if (err){
-// 				console.log(err, null);
 				callback(err, null);
 			}else {
-// 				console.log(null, data);
 				callback(null, data);
 			}
 		});
@@ -205,11 +198,9 @@ exports.allitems = function(req, res){
 	
 	listitems(function(err, data){
 		if (err){
-// 			console.log(err);
 			res.status(404).send(err);
 		}
 		else {
-// 			console.log(null, data);
 			res.status(200).send(data);
 		}
 	})
@@ -220,12 +211,11 @@ exports.deleteitems = function(req, res){
 	
 	deleteitemsuser(itemid, function(err, data){
 		if (err){
-			console.log(err);
+			console.log("error in items:line 215",err);
 			res.status(404).send(err);
 		}
 		else {
-			console.log(null, data);
-			res.status(200).send(data);
+			res.status(200).send("item deleted successfully");
 		}
 	})
 }
@@ -235,27 +225,23 @@ exports.searchitems = function(req, res){
 	
 	searchitemsuser(desc, function(err, data){
 		if (err){
-			console.log(err);
+			console.log("error in items: line 228",err);
 			res.status(404).send(err);
 		}
 		else {
-			console.log(null, data);
 			res.status(200).send(data);
 		}
 	})
 }
 //*************************************************
 exports.useritems = function(req, res){
-	//var desc = req.query.userid ? req.query.userid : null;
-// 	var userid = req.session.userid ? req.session.userid :null;
-
-			
+		
 async.waterfall([
   	getuserid, 
   	listitemsuser
   ], function(err, result){
   		if(err){
- 			console.log("line 199",err);
+ 			console.log("error in items:line 244",err);
  			res.status(404).send("cache error occured");
  		}else{
  			res.status(200).send(result);			
@@ -265,7 +251,7 @@ async.waterfall([
   function getuserid (callback){
   	client.get("userid",function(err, data){
  		if(err){
- 			console.log("line 199",err);
+ 			console.log("error in items:line 254",err);
  			callback(null);
  		}else{
  			callback(null,parseInt(data));				
@@ -276,11 +262,10 @@ async.waterfall([
   function listitemsuser(arg1, callback){
 		listuseritems(arg1, function(err, data){
 		if (err){
-			console.log(err);
+			console.log("error in items:line 265",err);
 			callback(err, null);
 		}
 		else {
-			console.log(null, data);
 			callback(null, data);
 		}
 	})

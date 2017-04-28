@@ -3,19 +3,12 @@
  const bodyParser = require('body-parser');
  const request = require('request');
  const async = require('async');
- 
- var headers = {
-  "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
-  "accept-language" : "en-US,en;q=0.8",
-  "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-  "accept-encoding" : "gzip,deflate",
-};
-
+ const zlib = require('zlib');
+ //**********************************************************
+ //**********************************************************
  exports.signup= function(req, reply){
- console.log('port 8443 executing sign up');
+ 
  	var body = req.body;
- 	var ip = (req.headers['x-forwarded-for'] || '192.27.3.1').split(',')[0];
- 		
 		async.waterfall([
 			verfiyUser,
     		addUser
@@ -34,23 +27,25 @@
 			var options={
  					uri:'https://localhost:9443/api/signup/verifyuser',
  					method :'POST',
- 					headers:headers,
+ 					headers:{
+ 							'Authorization':'SecureConnection'
+ 							},
  					body:req.body,
  					json:true,
  					rejectUnauthorized: false,
     				requestCert: true,
-    				agent: false
+    				agent: false,
+    				gzip:true
  				}
  			request(options, function(err, response, body){
- 				if(err) { 
- 				console.log(err); 
- 				callback("User Already Exists with this email"); 
- 				return; 
- 				}
-//         				obj = JSON.parse(body);
-// 					console.log("line 45",body);
-        				callback(false, body);
- 			});
+
+ 					if(err) { 
+ 						console.log("line 71:",err); 
+ 						callback(err); 
+ 						return; 
+ 					}
+ 					callback(false, body);
+        		});
 		}
 		
 		function addUser(arg1, callback) {
@@ -59,20 +54,23 @@
     			var options={
  					uri:'https://localhost:9443/api/signup/adduser',
  					method :'POST',
- 					headers:headers,
+ 					headers:{
+ 							'Authorization':'SecureConnection'
+ 							},
  					body:req.body,
  					json:true,
  					rejectUnauthorized: false,
     				requestCert: true,
-    				agent: false
+    				agent: false,
+    				gzip:true
  				 	}
  				request(options,function(err, response, body){
+						
  					if(err) { 
- 					console.log("line 71:",err); 
- 					callback(err); 
- 					return; 
+ 						console.log("line 71:",err); 
+ 						callback(err); 
+ 						return; 
  					}
-//         					obj = JSON.parse(body);
         					callback(false, body);
  				});
     		} else {

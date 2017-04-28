@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>My Profile - Go Online Auctions</title>
+		<title>Search - Go Online</title>
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -41,6 +41,42 @@
 		<script src="assets/js/html5shiv.min.js"></script>
 		<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script>
+		
+			$(document).on("click", ".mybid", function(){
+				var $row = $(this).closest("tr"),
+					$tds = $row.find("td:nth-child(1)"),
+					$item_id = $tds.text(),
+					$tds = $row.find("td:nth-child(5)"),
+					$bidprice = $(this).closest("tr").find('input.bidprice').val();
+				
+				console.log($item_id);
+				console.log($bidprice);
+				
+				var body = {
+					"userid": $item_id,
+                    "itemid": $item_id,
+                    "bidamount": $bidprice
+                }
+				console.log(body);
+                
+				$.ajax({
+                    type: "POST",
+                    url: "https://localhost:8443/api/user/postbids",
+					crossDomain: true,
+					contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(body),
+                    }).done(function ( data ) {
+						console.log("Success: "+JSON.stringify(data));
+						alert("Successfully added bid!")
+					}).fail(function ( data ) {
+						   console.log("Error: "+JSON.stringify(data));
+				});
+			});
+		</script>
+		
+		
 	</head>
 
 	<body class="no-skin">
@@ -89,14 +125,13 @@
 								</li>
 
 								<li class="divider"></li>
-								
+
 								<li>
 									<a id="logout" href="#">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
 									</a>
 								</li>
-
 							</ul>
 						</li>
 					</ul>
@@ -125,7 +160,7 @@
 						<b class="arrow"></b>
 					</li>
 					
-					<li>
+					<li class="active">
 						<a href="https://localhost:8000/api/search">
 							<i class="menu-icon fa  fa-laptop"></i>
 							<span class="menu-text"> Search Items </span>
@@ -146,7 +181,7 @@
 						</a>
 					</li>
 					
-					<li>
+					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list"></i>
 							<span class="menu-text"> My Activity </span>
@@ -185,6 +220,7 @@
 							</li>
 						</ul>
 					</li>
+
 					
 				</ul><!-- /.nav-list -->
 
@@ -199,9 +235,9 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="ace-icon fa fa-home home-icon"></i>
-								<a href="#">Home</a>
+								<a href="https://localhost:8000/api/dashboard">Home</a>
 							</li>
-							<li class="active">My Profile</li>
+							<li class="active">Search</li>
 						</ul><!-- /.breadcrumb -->
 					</div>
 
@@ -209,95 +245,68 @@
 
 						<div class="page-header">
 							<h1>
-								My Profile
+								Search Items
+								<small>
+									<i class="ace-icon fa fa-angle-double-right"></i>
+									Items and their details
+								</small>
 							</h1>
 						</div><!-- /.page-header -->
+						
+						<div class="row search">
+							<div class="col-xs-12 col-sm-8">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="ace-icon fa fa-check"></i>
+									</span>
 
+									<input id="item" type="text" class="form-control search-query" placeholder="Search Items" />
+									<span class="input-group-btn">
+										<button type="button" class="btn btn-caret btn-sm itemsearch">
+											<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+											Search
+										</button>
+									</span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="hr hr32 hr-dotted"></div>
+						
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								<div class="row">
-									<div class="col-sm-12">
-									
-									<div class="update-profile">
-									<form class="form-horizontal" role="form">
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> User Id </label>
+								<div class="table-header">
+									Items Status
+								</div>
 
-										<div class="col-sm-9">
-											<input readonly="" type="text" id="userid" class="col-xs-10 col-sm-5" id="form-input-readonly"/>
-
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> Email Id </label>
-
-										<div class="col-sm-9">
-											<input readonly="" type="text" id="email" class="col-xs-10 col-sm-5" id="form-input-readonly"/>
-
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> First Name </label>
-
-										<div class="col-sm-9">
-											<input type="text" id="firstname" placeholder="First Name" class="col-xs-10 col-sm-5" />
-										</div>
-									</div>
-									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Last Name </label>
-
-										<div class="col-sm-9">
-											<input type="text" id="lastname" placeholder="Last Name" class="col-xs-10 col-sm-5" />
-										</div>
-									</div>
-									
-									
-									<div class="clearfix form-actions">
-										<div class="col-md-offset-3 col-md-9">
-											<button id="submit" class="btn btn-info" type="button">
-												<i class="ace-icon fa fa-check bigger-110"></i>
-												Submit
-											</button>
-
-											&nbsp; &nbsp; &nbsp;
-											<button class="btn" type="reset">
-												<i class="ace-icon fa fa-undo bigger-110"></i>
-												Reset
-											</button>
-										</div>
-									</div>
-									</div>
-									
+								<!-- div.dataTables_borderWrap -->
+								<div>
+									<table class="table table-striped table-bordered table-hover dynamic-table" id="dyn-tab">
+										<thead>
+											<tr>
+												<th>Item Id</th>
+												<th>Name</th>
+												<th class="hidden-480">Price ($)</th>
+												<th>
+													<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>
+													Posted Time
+												</th>
+												<th>Status</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody id ="searchitems">
+											
 										
-									</div><!-- /.col -->
-								</div><!-- /.row -->
-
-								
-								
-								<div class="profile-info-row">
-											<div class="profile-info-name"> Last Login: </div>
-
-											<div class="profile-info-value">
-												<span class="editable" id="lastlogin"></span>
-											</div>
-									</div>
-									
-									<div class="profile-info-row">
-											<div class="profile-info-name"> Location: </div>
-
-											<div class="profile-info-value">
-												<span class="editable" id="location"></span>
-											</div>
-									</div>
-
-
-								
+										</tbody>
+									</table>
+								<div>
+							</div>
+						</div>	
+						
 					</div><!-- /.page-content -->
+					
 				</div>
 			</div><!-- /.main-content -->
 
@@ -333,17 +342,14 @@
 		<script src="assets/js/bootstrap.min.js"></script>
 
 		<!-- page specific plugin scripts -->
-
-		<!--[if lte IE 8]>
-		  <script src="assets/js/excanvas.min.js"></script>
-		<![endif]-->
-		<script src="assets/js/jquery-ui.custom.min.js"></script>
-		<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
-		<script src="assets/js/jquery.easypiechart.min.js"></script>
-		<script src="assets/js/jquery.sparkline.index.min.js"></script>
-		<script src="assets/js/jquery.flot.min.js"></script>
-		<script src="assets/js/jquery.flot.pie.min.js"></script>
-		<script src="assets/js/jquery.flot.resize.min.js"></script>
+		<script src="assets/js/jquery.dataTables.min.js"></script>
+		<script src="assets/js/jquery.dataTables.bootstrap.min.js"></script>
+		<script src="assets/js/dataTables.buttons.min.js"></script>
+		<script src="assets/js/buttons.flash.min.js"></script>
+		<script src="assets/js/buttons.html5.min.js"></script>
+		<script src="assets/js/buttons.print.min.js"></script>
+		<script src="assets/js/buttons.colVis.min.js"></script>
+		<script src="assets/js/dataTables.select.min.js"></script>
 
 		<!-- ace scripts -->
 		<script src="assets/js/ace-elements.min.js"></script>
@@ -351,90 +357,100 @@
 
 		<!-- inline scripts related to this page -->
 		
-		
-		<script>
+		<script type="text/javascript">
+		$( document ).ready(function() {
+			// Get Posted Items
 			
-			//Location API
-			var $location;
-			$.get("https://ipinfo.io", function (response) {
-				$location = response.city + ", " + response.region;
-				console.log($location);
-				$("#location").text($location);
-			}, "jsonp");
-			//End of location API
+			jQuery(function($) {
 			
-			//Get Profile data
-			$.ajax({
-                    type: "GET",
-                    url: "https://localhost:8443/api/user/profileinfo",
-					crossDomain: true,
-					headers :{ 'Authorization':'SecureConnection' },
-                    success: function(data) {
-						console.log(data[0].email);
-						$("#userid").val(data[0].user_id);
-						$("#email").val(data[0].email);
-						$("#firstname").val(data[0].first_name);
-						$("#lastname").val(data[0].last_name);
-						var datetime = new Date(Date.parse(data[0].lastlogintime));
-						$("#lastlogin").text(datetime);
-					},
-					error: function(data) {
-						
+				$('.search').delegate('.itemsearch','click',function(e) {
+					
+					if ($.fn.DataTable.isDataTable( '#dyn-tab' )) {
+							$('#dyn-tab').dataTable().fnDestroy();
 					}
+					
+					e.preventDefault();
+
+					var item = $("#item").val();
+					
+					$.ajax({
+						type: "GET",
+						url: "https://localhost:8443/api/user/searchitems?desc="+item,
+						crossDomain: true,
+						headers :{ 'Authorization':'SecureConnection' },
+						success: function(data) {
+						var tdata="";
+
+						var c = 1;
+						$.each(data, function (i, item) {
+								
+							tdata+=	"<tr>"
+							+				"<td>" + item.item_id + "</td>"
+							+				"<td>" + item.item_desc + "</td>"
+							+				"<td>"+  item.init_bid  +"</td>"
+							+				"<td>"+ item.shelf_time +"</td>"
+							+				"<td><input type=\"text\" class=\"col-xs-4 bidprice\" name=\"bidprice[]\"></td>"
+							+				"<td>"
+							+					"<button type=\"button\" class=\"btn btn-success mybid\">Bid</button>"
+							+				"</td>"
+							+			"</tr>";
+							
+							 c += 1;
+						});
+						
+						$("#searchitems").append(tdata);
+						tdata="";
+						},
+						error: function(data) {
+							//var $label = $("<label>").text(JSON.parse(data.responseText).message);
+					
+						}
+					}).done(function() {
+					
+						$('.dynamic-table').DataTable( {
+							bAutoWidth: false,
+							"aoColumns": [
+							  null, null,null, null, 
+							  { "bSortable": false },
+							  { "bSortable": false }
+							],
+							"aaSorting": [],
+					
+							select: {
+								style: 'multi'
+							}
+						});
+				
+					});
+				});
+				
 			});
-			//End of get profile data
+			// End of get posted items
+		
 			
-			//Post profile data
-			$('.update-profile').on('click','#submit',function(e) {
-                e.preventDefault();
+		});
+		
+		//Log Out
+		$('.user-logout').on('click','#logout',function(e) {
+			e.preventDefault();
 
-                var body = {
-					email: $("#email").val(),
-					firstname: $("#firstname").val(),
-                    lastname: $("#lastname").val()
-                }
-					 
-			console.log("Body: "+JSON.stringify(body));
-
-                $.ajax({
-                    type: "POST",
-                    url: "https://localhost:8443/api/user/editprofile",
-					crossDomain: true,
-					headers :{ 'Authorization':'SecureConnection' },
-					contentType: "application/json; charset=utf-8",
-                    //dataType: "text json", Removed as response is not exactly in JSON, so error is triggered
-					data: JSON.stringify(body),
-                }).done(function ( data ) {
-						console.log("Success: "+JSON.stringify(data));
-						//window.location.href = "https://localhost:8000/index.html";
-				}).fail(function ( data ) {
-					   console.log("Error: "+JSON.stringify(data));
-				});
-					
-            });
-			// End of post profile data
-			
-			//Log Out
-			$('.user-logout').on('click','#logout',function(e) {
-                e.preventDefault();
-
-                $.ajax({
-					
-                    type: "POST",
-                    url: "https://localhost:8443/api/logout",
-					crossDomain: true,
-					headers :{ 'Authorization':'SecureConnection' },
-					contentType: "application/json; charset=utf-8",
-                }).done(function ( data ) {
-						console.log("Success: "+JSON.stringify(data));
-						window.location.href = "https://localhost:8000/api/login";
-				}).fail(function ( data ) {
-					   console.log("Error: "+JSON.stringify(data));
-				});
-					
-            });
-			//End of Logout
-			
+			$.ajax({
+				
+				type: "POST",
+				url: "https://localhost:8443/api/logout",
+				crossDomain: true,
+				headers :{ 'Authorization':'SecureConnection'},
+				contentType: "application/json; charset=utf-8",
+			}).done(function ( data ) {
+					console.log("Success: "+JSON.stringify(data));
+					window.location.href = "https://localhost:8000/api/login";
+			}).fail(function ( data ) {
+				   console.log("Error: "+JSON.stringify(data));
+			});
+				
+		});
+		//End of Logout
+		
 		</script>
 		
 		

@@ -8,22 +8,17 @@
  const express = require('express');
  const bodyParser = require('body-parser');
  const routes = require('./routes.js');
- const session = require('express-session')
+ const compression = require('compression');
 
  var app = express();
  app.use(bodyParser.json());
- 
- app.use(session({
-  secret: 'SecureKey',
-  resave: true,
-  saveUninitialized: true
-  }));
- 
+
 var options = {
    key  : fs.readFileSync('./server1/server.key'),
    cert : fs.readFileSync('./server1/server.crt')
 };
 
+ app.use(compression());
  app.use('/api',routes);
 
  

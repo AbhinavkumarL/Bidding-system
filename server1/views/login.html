@@ -258,6 +258,7 @@
                     type: "POST",
                     url: "https://localhost:8443/api/login",
 					crossDomain: true,
+					headers :{ 'Authorization':'SecureConnection' },
 					contentType: "application/json; charset=utf-8",
                     //dataType: "text json", Removed as response is not exactly in JSON, so error is triggered
 					data: JSON.stringify(body),
@@ -289,6 +290,7 @@
                     type: "POST",
                     url: "https://localhost:8443/api/signup",
 					crossDomain: true,
+					headers :{ 'Authorization':'SecureConnection' },
 					contentType: "application/json; charset=utf-8",
 					data: JSON.stringify(body),
                 }).done(function ( data ) {

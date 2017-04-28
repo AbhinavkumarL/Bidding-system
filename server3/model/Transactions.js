@@ -44,7 +44,7 @@
  //***************************************************************
  function itemsuserpurchasedDB(userid, cb){
  	
- 	var q = "select i.item_id, i.item_desc, t.trans_id, t.bid_id, t.trans_value from items i, bids b, transactions t  where t.bid_id=b.bid_id and b.item_id = i.item_id and i.status ='soldout'and b.user_id = ?";
+ 	var q = "select i.item_id, i.item_desc, t.trans_id, t.bid_id, t.trans_value ,t.Rec_mtn_time from items i, bids b, transactions t  where t.bid_id=b.bid_id and b.item_id = i.item_id and i.status ='soldout'and b.user_id = ?";
  	
  	db.query(q, userid, function(err, data){
  		if (err){

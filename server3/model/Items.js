@@ -26,13 +26,14 @@
  //Register the items posted by the user in Items table
  function registerItemsDB(desc, userid, initbid, shelftime, cb){
  	
- 	var q = "insert into items (item_desc, user_id, init_bid, shelf_time)"
- 			+"values(?,?,?,?)";
+ 	var q = "insert into items (item_desc, user_id, init_bid, shelf_time, highest_bid)"
+ 			+"values(?,?,?,?,?)";
  	var values =[
  		desc,
  		userid,
  		initbid,
- 		shelftime
+ 		shelftime, 
+ 		initbid
  	];
  	
  	db.query(q,values, function(err, data){
@@ -46,7 +47,7 @@
  //***************************************************************
  function listitemsDb (cb){
  	
- 	var q = "select i.item_id, i.item_desc, IF(b.bid_amount is null,i.init_bid,b.bid_amount) as bid_amount, i.shelf_time from items i left join  bids b on i.item_id = b.item_id and  b.bid_id = (select max(bid_amount) from bids group by item_id) where i.status = 'available'";
+ 	var q = "select * from items";
  	
  	db.query(q, function(err, data){
  		if (err){
@@ -138,6 +139,7 @@
  		}else if(data.length===0){
  			registerItemsDB(desc, userid, initbid, shelftime , function(err, data){
  				if (err){
+ 					console.log("post item error:", err);
  					res.status(404).send(err);
  				}else {
  					res.status(200).send("Items Successfully registered");
