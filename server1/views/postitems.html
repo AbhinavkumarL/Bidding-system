@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>My Profile - Go Online Auctions</title>
+		<title>Post Items - Go Online Auctions</title>
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -89,14 +89,13 @@
 								</li>
 
 								<li class="divider"></li>
-								
+
 								<li>
 									<a id="logout" href="#">
 										<i class="ace-icon fa fa-power-off"></i>
 										Logout
 									</a>
 								</li>
-
 							</ul>
 						</li>
 					</ul>
@@ -116,6 +115,7 @@
 
 
 				<ul class="nav nav-list">
+					
 					<li>
 						<a href="https://localhost:8000/api/dashboard">
 							<i class="menu-icon fa fa-tachometer"></i>
@@ -132,7 +132,7 @@
 						</a>
 					</li>
 					
-					<li>
+					<li class="active">
 						<a href="https://localhost:8000/api/postitems">
 							<i class="menu-icon fa fa-check-square-o"></i>
 							<span class="menu-text"> Post Items</span>
@@ -146,7 +146,7 @@
 						</a>
 					</li>
 					
-					<li>
+					<li class="">
 						<a href="#" class="dropdown-toggle">
 							<i class="menu-icon fa fa-list"></i>
 							<span class="menu-text"> My Activity </span>
@@ -199,9 +199,9 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="ace-icon fa fa-home home-icon"></i>
-								<a href="#">Home</a>
+								<a href="https://localhost:8000/api/dashboard">Home</a>
 							</li>
-							<li class="active">My Profile</li>
+							<li class="active">Post Items</li>
 						</ul><!-- /.breadcrumb -->
 					</div>
 
@@ -209,54 +209,47 @@
 
 						<div class="page-header">
 							<h1>
-								My Profile
+								Post Items
+								<small>
+									<i class="ace-icon fa fa-angle-double-right"></i>
+									Items you want to sell
+								</small>
 							</h1>
 						</div><!-- /.page-header -->
 
-						<div class="row">
+						<div class="row post-items">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
+
 								<div class="row">
 									<div class="col-sm-12">
-									
-									<div class="update-profile">
+										
 									<form class="form-horizontal" role="form">
-									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> User Id </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Item Name </label>
 
 										<div class="col-sm-9">
-											<input readonly="" type="text" id="userid" class="col-xs-10 col-sm-5" id="form-input-readonly"/>
-
+											<input type="text" id="item_name" placeholder="Item Description" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-input-readonly"> Email Id </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Initial Bid ($)</label>
 
 										<div class="col-sm-9">
-											<input readonly="" type="text" id="email" class="col-xs-10 col-sm-5" id="form-input-readonly"/>
-
+											<input type="text" id="initial_bid" placeholder="Minimum Item Price" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									
 									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> First Name </label>
+										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Shelf Time (In Seconds)</label>
 
 										<div class="col-sm-9">
-											<input type="text" id="firstname" placeholder="First Name" class="col-xs-10 col-sm-5" />
+											<input type="text" id="shelf_time" placeholder="Shelf Time" class="col-xs-10 col-sm-5" />
 										</div>
 									</div>
 									
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Last Name </label>
 
-										<div class="col-sm-9">
-											<input type="text" id="lastname" placeholder="Last Name" class="col-xs-10 col-sm-5" />
-										</div>
-									</div>
-									
-									
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
 											<button id="submit" class="btn btn-info" type="button">
@@ -271,30 +264,12 @@
 											</button>
 										</div>
 									</div>
-									</div>
-									
+										
 										
 									</div><!-- /.col -->
 								</div><!-- /.row -->
 
-								
-								
-								<div class="profile-info-row">
-											<div class="profile-info-name"> Last Login: </div>
-
-											<div class="profile-info-value">
-												<span class="editable" id="lastlogin"></span>
-											</div>
-									</div>
-									
-									<div class="profile-info-row">
-											<div class="profile-info-name"> Location: </div>
-
-											<div class="profile-info-value">
-												<span class="editable" id="location"></span>
-											</div>
-									</div>
-
+								<div class="hr hr32 hr-dotted"></div>
 
 								
 					</div><!-- /.page-content -->
@@ -334,85 +309,36 @@
 
 		<!-- page specific plugin scripts -->
 
-		<!--[if lte IE 8]>
-		  <script src="assets/js/excanvas.min.js"></script>
-		<![endif]-->
-		<script src="assets/js/jquery-ui.custom.min.js"></script>
-		<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
-		<script src="assets/js/jquery.easypiechart.min.js"></script>
-		<script src="assets/js/jquery.sparkline.index.min.js"></script>
-		<script src="assets/js/jquery.flot.min.js"></script>
-		<script src="assets/js/jquery.flot.pie.min.js"></script>
-		<script src="assets/js/jquery.flot.resize.min.js"></script>
-
-		<!-- ace scripts -->
-		<script src="assets/js/ace-elements.min.js"></script>
-		<script src="assets/js/ace.min.js"></script>
-
-		<!-- inline scripts related to this page -->
-		
-		
 		<script>
-			
-			//Location API
-			var $location;
-			$.get("https://ipinfo.io", function (response) {
-				$location = response.city + ", " + response.region;
-				console.log($location);
-				$("#location").text($location);
-			}, "jsonp");
-			//End of location API
-			
-			//Get Profile data
-			$.ajax({
-                    type: "GET",
-                    url: "https://localhost:8443/api/user/profileinfo",
-					crossDomain: true,
-					headers :{ 'Authorization':'SecureConnection' },
-                    success: function(data) {
-						console.log(data[0].email);
-						$("#userid").val(data[0].user_id);
-						$("#email").val(data[0].email);
-						$("#firstname").val(data[0].first_name);
-						$("#lastname").val(data[0].last_name);
-						var datetime = new Date(Date.parse(data[0].lastlogintime));
-						$("#lastlogin").text(datetime);
-					},
-					error: function(data) {
-						
-					}
-			});
-			//End of get profile data
-			
-			//Post profile data
-			$('.update-profile').on('click','#submit',function(e) {
+		
+		    //Post items
+			$('.post-items').on('click','#submit',function(e) {
                 e.preventDefault();
 
                 var body = {
-					email: $("#email").val(),
-					firstname: $("#firstname").val(),
-                    lastname: $("#lastname").val()
+					desc: $("#item_name").val(),
+					initbid: $("#initial_bid").val(),
+                    shelftime: $("#shelf_time").val()
                 }
 					 
 			console.log("Body: "+JSON.stringify(body));
 
                 $.ajax({
                     type: "POST",
-                    url: "https://localhost:8443/api/user/editprofile",
+                    url: "https://localhost:8443/api/user/postitems",
 					crossDomain: true,
 					headers :{ 'Authorization':'SecureConnection' },
 					contentType: "application/json; charset=utf-8",
-                    //dataType: "text json", Removed as response is not exactly in JSON, so error is triggered
 					data: JSON.stringify(body),
                 }).done(function ( data ) {
 						console.log("Success: "+JSON.stringify(data));
-						//window.location.href = "https://localhost:8000/index.html";
+						alert("Item posted successfully!");
 				}).fail(function ( data ) {
 					   console.log("Error: "+JSON.stringify(data));
 				});
 					
             });
-			// End of post profile data
+			//End of post items
 			
 			//Log Out
 			$('.user-logout').on('click','#logout',function(e) {
@@ -434,8 +360,10 @@
 					
             });
 			//End of Logout
-			
+		
+		
 		</script>
+		
 		
 		
 	</body>

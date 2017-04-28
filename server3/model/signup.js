@@ -10,10 +10,10 @@
  
  //verify if the user already exists
  var checkUserDB = function(email, callback){
- console.log("line13:");
+//  console.log("line13:");
  	var q = "select * from users where email= ?";
  	db.query(q, email, function(err, data){
- 	console.log("line 16",q);
+//  	console.log("line 16",q);
  		if (err){
  			callback(err, null);
  		}else {
@@ -37,15 +37,15 @@
  		body.lastname,
  		body.loginlocation
  		]
- 		console.log("line53:",body.password, id, md5(body.password+id));
+//  		console.log("line53:",body.password, id, md5(body.password+id));
  		
  		db.query( q, values, function(err, data){
- 		console.log("line 43",q);
+//  		console.log("line 43",q);
  			if (err){
  				console.log(err);
  				callback(err, null);
  			}else {
- 				console.log("line 48:",data);
+//  				console.log("line 48:",data);
  				callback(null, data);
  			}
  		});
@@ -57,12 +57,12 @@
  exports.verifyuser = (function(req, reply){
   var email = req.body.email;
  	checkUserDB(email, function(err,data){
- 	console.log("line 60", email);
+//  	console.log("line 60", email);
  		if (err){
  		consloe.log(err);
  			reply.status(404).send(err)
  		}else {
- 		console.log("line 65",data);
+//  		console.log("line 65",data);
  			reply.status(200).send(data)
  		}
  	});
@@ -70,11 +70,21 @@
  exports.adduser = (function(req, reply){
  var body = req.body;
  	addUsersDB(body, function(err,data){
- 	console.log("line 72",body);
+//  	console.log("line 72",body);
  		if (err){
  			reply.status(404).send(err)
  		}else {
- 			reply.status(200).send(data)
+ 		 	// zlib.gzip(data, function(err, data){
+//     			if (err){
+//     				console.log("this is a zipping error");
+//     				reply.status(404).send(err)
+//     			}else{
+//     				console.log("Response is compressed");
+//     				reply.status(200).send(data)
+//     			}
+//  			});
+			reply.status(200).send(data)
+
  		}
  	});
  });

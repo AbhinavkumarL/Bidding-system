@@ -11,25 +11,26 @@
  const c_trans = require('./controllers/Transactions.js');
  const c_profile = require('./controllers/profileInfo.js');
  const jwt = require('jsonwebtoken');
- const zip = require('zlib');
  const redis = require('redis');
  const client = redis.createClient(6379); 
  
  var router = express.Router();
  
-var headers = {
-  "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
-  "accept-language" : "en-US,en;q=0.8",
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":"X-Requested-With",
-  "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-  "accept-encoding" : "gzip,deflate",
-};
-
+ router.use(function (req, res, next){
+ 	console.log("verifying Web service Authorization")
+ 	console.log("request headers:", req.headers);
+ 	if ( req.headers.authorization === 'SecureConnection'){
+ 		console.log("Client is Authorized");
+ 		next();
+ 	}else{
+ 		console.log("client is not Authorized");
+ 		res.status(404).send("Unauthorized Request....");
+ 	}
+ });
+ 
 router.post('/login', c_loginout.login);
 
 var auth = function(req, res, next){
-
 	client.get('session', function(err, data){
 		if (data === null){
 			console.log("44:session expired. Please login again");
@@ -39,19 +40,6 @@ var auth = function(req, res, next){
 		}
 	})
   }
-// function pickup(req, response) {
-// 	if (request.method == 'OPTIONS') {
-// 		response.setHeader('Access-Control-Allow-Origin', '*');
-// 		response.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE');
-// 		response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
-// 		response.end();
-// 	}
-// 	else {
-// 		response.setHeader('Access-Control-Allow-Origin', '*');
-// 		response.setHeader('Authorization',req.session.userid);
-// 	}
-// }
-// router.use(pickup);
 
  router.use(function timeLog(req, res,next){
  	console.log("Time Log:"+Date.now());
@@ -77,25 +65,6 @@ var auth = function(req, res, next){
  
  router.get('/user/purchaseorder', auth, c_trans.purchaseorder);
  router.get('/user/searchitems', auth, c_items.searchitems);
- 
-// request (options , function (error, response, body) {
-// 			
-//   			if (!error && response.statusCode == 200) {
-//     			// If response is gzip, unzip first
-//     			var encoding = response.headers['content-encoding']
-//     			if (encoding && encoding.indexOf('gzip') >= 0) {
-//       			zlib.gunzip(body, function(err, dezipped) {
-//         			var json_string = dezipped.toString('utf-8');
-//         			var json = JSON.parse(json_string);
-//         			// Process the json..
-//         			console.log(json);
-//         			res.send(body);
-//       			});
-//     		} else {
-//       			// Response is not gzipped
-//       			res.send(body);
-//     		}
-//  });
-  
+
 
  module.exports = router;

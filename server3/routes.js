@@ -18,6 +18,18 @@
  	next();
  });
  
+ router.use(function (req, res, next){
+ 	console.log("verifying Micro service Authorization in the request");
+//  	console.log("request headers:", req.headers);
+ 	if ( req.headers.authorization === 'SecureConnection'){
+ 	console.log("Client is Authorized");
+ 		next();
+ 	}else{
+ 		console.log("client is not Authorized");
+ 		res.status(404).send("Unauthorized Request....");
+ 	}
+ });
+ 
  router.get ('/allitems',m_items.allitems);
  router.post('/signup/verifyuser', m_signup.verifyuser); 
  router.post('/signup/adduser', m_signup.adduser);

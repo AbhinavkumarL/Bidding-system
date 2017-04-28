@@ -39,18 +39,6 @@ function sendMail(json, cb){
 }
 //*************************************************
 //*************************************************
-// exports.mailer = function(req, res){
-// 	var email = req.body.email ? req.body.email : null;
-// 	var desc = req.body.desc ? req.body.desc : null;
-// 	sendMail(email, desc, function(err, data){
-// 		if (err){
-// 			res.status(404).send(error);
-// 		}else{
-// 			res.status(200).send(info);
-// 		}
-// 	});
-// }
-
 /*
  * This script triggers transaction completion and send emails to both buyer and seller
  */

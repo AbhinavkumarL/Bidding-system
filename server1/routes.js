@@ -5,11 +5,11 @@
  const express = require('express');
  const request = require('request');
  const zip = require('zlib');
- var router = express.Router();
- var path = require("path");
+ const path = require("path");
  const redis = require('redis');
  const client = redis.createClient(6379); 
  
+ var router = express.Router();
 router.use(express.static(path.join(__dirname+'/views/')));
 
 router.use(function timeLog(req, res,next){
@@ -17,6 +17,7 @@ router.use(function timeLog(req, res,next){
  	next();
  });
  
+  
  var auth = function(req, res, next){
  client.get('session', function(err, data){
 		if (data === null){
@@ -27,21 +28,48 @@ router.use(function timeLog(req, res,next){
 		}
 	});
  }
- router.use(auth);
 
  router.get('/login', function(req, res) {
       res.sendFile(path.join(__dirname+'/views/login.html'));
   });
 
- router.get('/profile', auth, function(req, res) {
+ router.get('/profile',auth, function(req, res) {
 	res.sendFile(path.join(__dirname+'/views/profile.html'));
   });
 
- router.get('/test',auth,  function(req, res) {
+ router.get('/dashboard',auth,  function(req, res) {
 
-      res.sendFile(path.join(__dirname+'/views/test.html'));
+      res.sendFile(path.join(__dirname+'/views/dashboard.html'));
   });
 
+ router.get('/postitems',auth,  function(req, res) {
 
+      res.sendFile(path.join(__dirname+'/views/postitems.html'));
+  });
+
+ router.get('/mybids',auth,  function(req, res) {
+
+      res.sendFile(path.join(__dirname+'/views/mybids.html'));
+  });
+
+  router.get('/myitems',auth,  function(req, res) {
+
+      res.sendFile(path.join(__dirname+'/views/myitems.html'));
+  });
+
+  router.get('/mypo',auth,  function(req, res) {
+
+      res.sendFile(path.join(__dirname+'/views/mypo.html'));
+  });
+
+    router.get('/myitembids',auth,  function(req, res) {
+
+      res.sendFile(path.join(__dirname+'/views/myitembids.html'));
+  });
+
+    router.get('/search',auth,  function(req, res) {
+
+      res.sendFile(path.join(__dirname+'/views/search.html'));
+  });
 
  module.exports = router;

@@ -17,6 +17,15 @@
  		bidamount
  	];
  	
+ 	var q = "update items set highest_bid ="+ bidamount +" where item_id ="+itemid;
+ 	db.query(q, function(err, res){
+ 		if (err){
+ 			console.log("highest bid not updated", err);
+ 		}else {
+ 			console.log("highest bid updated");
+ 		}
+ 	});
+ 	
  	db.query(q,values, function(err, data){
  		if (err){
  			cb(err, null);
@@ -24,11 +33,12 @@
  			cb(null, data);
  		}
  	});
+ 	
  }
  
  //***************************************************************
  function listbidsDb(userid, cb) {
- 	var q = "select * from bids, items where bids.item_id = items.item_id and items.user_id = ? ";
+ 	var q = "select items.item_id, items.item_desc, bids.bid_id, bids.bid_amount, bids.Rec_mtn_time, items.status from bids, items where bids.item_id = items.item_id and items.user_id = ? ";
  	
  	db.query(q,userid, function(err, data){
  		if (err){

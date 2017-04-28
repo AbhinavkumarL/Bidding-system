@@ -41,17 +41,19 @@ select i.item_id, i.item_desc, if(b.bid_amount > init_bid ,b.bid_amount, i.init_
  
  
  
- SELECT item_id, MAX(init_bid) as init_bid 
+ SELECT item_id,  MAX(init_bid) as init_bid 
 FROM
 (
-    SELECT item_id, init_bid 
+    SELECT item_id, init_bid , item_desc
     FROM items
     UNION ALL
-    SELECT b.item_id, b.bid_amount as init_bid 
+    SELECT b.item_id, b.bid_amount as init_bid , item_desc
     FROM bids b, items i where b.item_id = b.item_id
 ) as subQuery
-GROUP BY item_id
-ORDER BY item_id;
+GROUP BY item_id 
+ORDER BY item_id ;
+
+
 
 select  i.item_id, i.item_desc , i.shelf_time, b.bid_amount , i.init_bid , i.status, b.bid_id 
 from items i left join  bids b on  (b.item_id, b.bid_amount) in ( select  item_id ,max(bid_amount) from 

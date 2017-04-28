@@ -5,12 +5,6 @@
  const redis = require('redis');
  const client = redis.createClient(6379); 
   
- var headers = {
-  "accept-charset" : "ISO-8859-1,utf-8;q=0.7,*;q=0.3",
-  "accept-language" : "en-US,en;q=0.8",
-  "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-  "accept-encoding" : "gzip,deflate",
-}
 //*******************************************************
 function loadProfile(userid, callback){
 
@@ -27,7 +21,9 @@ client.get("profileinfo", function(err, res){
 			uri:'https://localhost:9443/api/user/profileInfo',
 				qs:{userid},
  				method :'GET',
- 				headers:headers,
+ 				headers:{
+ 					'Authorization':'SecureConnection'
+ 						},
  				json:true,
  				rejectUnauthorized: false,
     			requestCert: true,
@@ -46,7 +42,6 @@ client.get("profileinfo", function(err, res){
  						console.log("user profile successfully stored in cache");
  					}
  			});		
-// 				console.log("line 50",body);
         			callback(false, body);
         		});
         	}
@@ -58,7 +53,9 @@ function editprofile(userid, firstname, lastname, email, callback){
 		uri:'https://localhost:9443/api/user/updateprofile',
 		method :'POST',
 		body:{userid, firstname, lastname, email},
- 		headers:headers,
+ 		headers:{
+ 				'Authorization':'SecureConnection'
+ 				},
  		json:true,
  		rejectUnauthorized: false,
     	requestCert: true,
@@ -78,8 +75,6 @@ function editprofile(userid, firstname, lastname, email, callback){
 //******************************************************
 //******************************************************
 exports.profileInfo = function(req, res){
-// 	var userid = req.query.userid ? req.query.userid :null;
-// 	var userid = req.session.userid ? req.session.userid :null;
 var userid ;
 async.waterfall([
   	getuserid, 
@@ -125,8 +120,7 @@ exports.updateprofile = function(req, res){
 	var firstname = req.body.firstname ? req.body.firstname :null;
 	var lastname = req.body.lastname ? req.body.lastname :null;
 	var email = req.body.email ? req.body.email :null;
-// 	var userid = req.body.userid ? req.body.userid :null;
-	
+
 async.waterfall([
   	getuserid, 
   	edituser
@@ -151,7 +145,6 @@ async.waterfall([
   }
   
   function edituser(arg1, callback){
-// 		console.log("line 50:",userid);
 		editprofile(arg1, firstname, lastname, email, function(err, data){
 	 	if (err){
 			callback(err, null);
