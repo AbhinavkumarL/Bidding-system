@@ -177,7 +177,7 @@ var userid ;
 					console.log("login informtaiont updated");
 				}
 			});
-			client.set("session", JSON.stringify(data.sessionToken),function(err, added){
+			client.set("session", JSON.stringify(data.sessionToken), 'EX', 60 * 10,function(err, added){
 			console.log("session cached");
  						if(err){
  							console.log("line 170",err);
@@ -185,7 +185,7 @@ var userid ;
  							console.log("line 173", added);					
         					}
  					});
- 			client.set("userid", JSON.stringify(data.userid),function(err, added){
+ 			client.set("userid", JSON.stringify(data.userid), 'EX', 60 * 10,function(err, added){
  						if(err){
  							console.log("line 58",err);
  						}else{
