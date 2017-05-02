@@ -20,7 +20,7 @@
  
  router.use(function (req, res, next){
  	console.log("verifying Micro service Authorization in the request");
-//  	console.log("request headers:", req.headers);
+ 	console.log("request headers:", req.headers);
  	if ( req.headers.authorization === 'SecureConnection'){
  	console.log("Client is Authorized");
  		next();

@@ -45,11 +45,17 @@ function sendMail(json, cb){
  * This script triggers transaction completion and send emails to both buyer and seller
  */
  setInterval(function(){
-	timedoutitems()
+	timedoutitems(function(err, res){
+		if (err){
+			console.log(err);
+		}else{
+			console.log("emails sent to both seller and buyer.");
+		}
+	})
  },6000);
 
  
-function timedoutitems() {
+function timedoutitems(callback) {
 		
     var q = "select item_id, user_id ,item_desc from items where shelf_time=0 and notification_status ='N' and status ='available'";
     db.query(q,function(err, data){

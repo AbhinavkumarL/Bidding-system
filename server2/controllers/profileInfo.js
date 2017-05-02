@@ -13,9 +13,10 @@ client.get("profileinfo", function(err, res){
 		console.log("cache error.....");
 		callbakc(err, null);
 	} else if (res && res.length > 0) {
-			console.log("result from cache:",JSON.parse(res));
+			console.log("Getting User profile infor from Cache:",JSON.parse(res));
 			callback(null,JSON.parse(res));
 		} else {
+		console.log("Cache miss ... Getting User profile infor from DB");
 			console.log("line 50:",userid);
 			var options = {
 			uri:'https://localhost:9443/api/user/profileInfo',
@@ -89,6 +90,7 @@ async.waterfall([
   });
   
   function getuserid (callback){
+  console.log("Getting User login information from cache...");
   	client.get("userid",function(err, data){
  		if(err){
  			console.log("line 199",err);
@@ -104,10 +106,10 @@ async.waterfall([
   function loaduser(args1, callback){
 		console.log("line 50:",userid);		loadProfile(userid, function(err, data){
 			if (err){
-				console.log(err, null);
+// 				console.log(err, null);
 				res.send(err);
 			}else {
-				console.log(null, data);
+// 				console.log(null, data);
 				res.send(data);
 			}
 		});
@@ -134,6 +136,7 @@ async.waterfall([
   });
   
   function getuserid (callback){
+  console.log("Getting User login information from cache...");
   	client.get("userid",function(err, data){
  		if(err){
  			console.log("line 199",err);

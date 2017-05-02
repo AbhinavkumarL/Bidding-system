@@ -3,6 +3,6 @@
 	"mysql" : {
 		"db" : "biddingSystem",
 		"user" : "root",
-		"password" : "anvesh"
+		"password" : "tiger"
 	}
 }
