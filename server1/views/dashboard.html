@@ -34,6 +34,12 @@
 
 		<!-- ace settings handler -->
 		<script src="assets/js/ace-extra.min.js"></script>
+		
+		<style style="text/css">
+		#test tr:hover {
+			background-color: lightyellow;	
+		}
+		</style>
 
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
@@ -70,7 +76,8 @@
                     data: JSON.stringify(body),
                     }).done(function ( data ) {
 						console.log("Success: "+JSON.stringify(data));
-						alert("Successfully added bid!")
+						alert("Successfully added bid!");
+						window.location.href = "https://localhost:8000/api/dashboard";
 					}).fail(function ( data ) {
 						   console.log("Error: "+JSON.stringify(data));
 				});
@@ -109,8 +116,8 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								
 								<span class="user-info">
-									<small>Welcome,</small>
-									Anvesh
+									<small>Welcome</small>
+									
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>

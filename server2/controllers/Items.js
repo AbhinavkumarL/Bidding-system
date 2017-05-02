@@ -42,9 +42,10 @@ function listitems(callback){
 			console.log("cache error items:line 41",err);
 			callback(err, null);
 		} else if (res && res.length > 0) {
-			console.log("result from cache:",JSON.parse(res));
+			console.log("Getting allitems from Cache:",JSON.parse(res));
 			callback(null,JSON.parse(res));
 		} else {
+			console.log("Cache miss ... Getting allitems list from DataBase");
 			var options = {
 				uri:'https://localhost:9443/api/allitems',
  				method :'GET',
@@ -203,25 +204,7 @@ exports.allitems = function(req, res){
 			res.status(404).send(err);
 		}
 		else {
-		var dummy = 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf'
-		+ 'shhsjdhjsdhfhsdjfjsdfjhsdfhjsdgjfhsgdjhfgshjfgjshdf';
-		data.dummy = dummy;
-			// var result = zlib.gzip(data, function(_, resp){
+				// var result = zlib.gzip(data, function(_, resp){
 // 				//res.end(resp);
 // 				res.status(200).send(resp);
 // 			})

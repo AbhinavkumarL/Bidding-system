@@ -72,4 +72,14 @@ router.use(function timeLog(req, res,next){
       res.sendFile(path.join(__dirname+'/views/search.html'));
   });
 
+    router.get('/error',  function(req, res) {
+
+      res.sendFile(path.join(__dirname+'/views/errorpage.html'));
+  });
+
+    router.get('*', function(req, res) {
+
+      res.redirect('/api/error');
+  });
+
  module.exports = router;

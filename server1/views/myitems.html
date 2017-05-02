@@ -66,6 +66,7 @@
 					}).done(function ( data ) {
 							console.log("Success: "+JSON.stringify(data));
 							alert("Successfully deleted!");
+							window.location.href = "https://localhost:8000/api/myitems";
 					}).fail(function ( data ) {
 						   console.log("Error: "+JSON.stringify(data));
 						   alert("Error!");
@@ -105,8 +106,8 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								
 								<span class="user-info">
-									<small>Welcome,</small>
-									Anvesh
+									<small>Welcome</small>
+									
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>
@@ -115,7 +116,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close user-logout">
 
 								<li>
-									<a href="profile.html">
+									<a href="https://localhost:8000/api/profile">
 										<i class="ace-icon fa fa-user"></i>
 										My Profile
 									</a>

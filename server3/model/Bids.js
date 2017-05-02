@@ -10,26 +10,28 @@
  function registerBidsDB(userid, itemid, bidamount, cb){
  	
  	var q = "insert into bids (user_id, item_id, bid_amount)"
- 			+"values(?,?,?)";
+ 			+" values(?,?,?)";
  	var values =[
  		userid,
  		itemid,
  		bidamount
  	];
  	
- 	var q = "update items set highest_bid ="+ bidamount +" where item_id ="+itemid;
- 	db.query(q, function(err, res){
- 		if (err){
- 			console.log("highest bid not updated", err);
- 		}else {
- 			console.log("highest bid updated");
- 		}
- 	});
+ 	
  	
  	db.query(q,values, function(err, data){
  		if (err){
  			cb(err, null);
  		}else {
+
+		 	var q = "update items set highest_bid ="+ bidamount +" where item_id ="+itemid;
+		 	db.query(q, function(err, res){
+		 		if (err){
+		 			console.log("highest bid not updated", err);
+		 		}else {
+		 			console.log("highest bid updated");
+		 		}
+		 	});
  			cb(null, data);
  		}
  	});

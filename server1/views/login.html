@@ -83,10 +83,6 @@
 													<div class="space"></div>
 
 													<div class="clearfix">
-														<label class="inline">
-															<input type="checkbox" class="ace" />
-															<span class="lbl"> Remember Me</span>
-														</label>
 
 														<button type="button" class="width-35 pull-right btn btn-sm btn-primary">
 															<i class="ace-icon fa fa-key"></i>
@@ -295,6 +291,9 @@
 					data: JSON.stringify(body),
                 }).done(function ( data ) {
 						console.log("Success: "+JSON.stringify(data));
+						alert("Registered Successfully!");
+						window.location.href = "https://localhost:8000/api/login";
+						
 				}).fail(function ( data ) {
 					   console.log("Error: "+JSON.stringify(data));
 				});

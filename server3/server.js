@@ -21,7 +21,7 @@
    cert : fs.readFileSync('./server3/server.crt')
 };
 
- app.use(compression());
+ app.use(compression({threshold:0}));
  app.use('/api',routes);
  
  

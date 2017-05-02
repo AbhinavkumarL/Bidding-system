@@ -65,6 +65,7 @@
                     type: "POST",
                     url: "https://localhost:8443/api/user/postbids",
 					crossDomain: true,
+					headers :{ 'Authorization':'SecureConnection' },
 					contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(body),
                     }).done(function ( data ) {
@@ -108,8 +109,8 @@
 							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 								
 								<span class="user-info">
-									<small>Welcome,</small>
-									Anvesh
+									<small>Welcome</small>
+									
 								</span>
 
 								<i class="ace-icon fa fa-caret-down"></i>
@@ -118,7 +119,7 @@
 							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close user-logout">
 
 								<li>
-									<a href="profile.html">
+									<a href="https://localhost:8000/api/profile">
 										<i class="ace-icon fa fa-user"></i>
 										My Profile
 									</a>
@@ -364,7 +365,7 @@
 			jQuery(function($) {
 			
 				$('.search').delegate('.itemsearch','click',function(e) {
-					
+					//window.location.href = "https://localhost:8000/api/search";
 					if ($.fn.DataTable.isDataTable( '#dyn-tab' )) {
 							$('#dyn-tab').dataTable().fnDestroy();
 					}
@@ -380,6 +381,7 @@
 						headers :{ 'Authorization':'SecureConnection' },
 						success: function(data) {
 						var tdata="";
+						$("#searchitems").empty();
 
 						var c = 1;
 						$.each(data, function (i, item) {
@@ -387,7 +389,7 @@
 							tdata+=	"<tr>"
 							+				"<td>" + item.item_id + "</td>"
 							+				"<td>" + item.item_desc + "</td>"
-							+				"<td>"+  item.init_bid  +"</td>"
+							+				"<td>"+  item.highest_bid  +"</td>"
 							+				"<td>"+ item.shelf_time +"</td>"
 							+				"<td><input type=\"text\" class=\"col-xs-4 bidprice\" name=\"bidprice[]\"></td>"
 							+				"<td>"
@@ -396,10 +398,11 @@
 							+			"</tr>";
 							
 							 c += 1;
+							
 						});
 						
 						$("#searchitems").append(tdata);
-						tdata="";
+						
 						},
 						error: function(data) {
 							//var $label = $("<label>").text(JSON.parse(data.responseText).message);

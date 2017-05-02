@@ -47,7 +47,7 @@
  //***************************************************************
  function listitemsDb (cb){
  	
- 	var q = "select * from items";
+ 	var q = "select * from items where status = 'available'";
  	
  	db.query(q, function(err, data){
  		if (err){
@@ -113,7 +113,7 @@
  //***************************************************************
  function searchitemsDb(desc, cb){
  	
- 	var q = "select * from items where item_desc like '%"+desc+"%'";
+ 	var q = "select * from items where status= 'available' and  item_desc like '%"+desc+"%'";
  	
  	db.query(q, desc, function(err, data){
  		if (err){
