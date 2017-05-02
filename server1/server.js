@@ -18,6 +18,7 @@ var options = {
    cert : fs.readFileSync('./server1/server.crt')
 };
 
+// app.use(express.static(__dirname + '/views/assets/'));
  app.use(compression({threshold:0}));
  app.use('/api',routes);
 
