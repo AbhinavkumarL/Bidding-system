@@ -30,11 +30,13 @@ router.use(function timeLog(req, res,next){
  }
 
  router.get('/login', function(req, res) {
+      
       res.sendFile(path.join(__dirname+'/views/login.html'));
   });
 
  router.get('/profile',auth, function(req, res) {
-	res.sendFile(path.join(__dirname+'/views/profile.html'));
+
+    res.sendFile(path.join(__dirname+'/views/profile.html'));
   });
 
  router.get('/dashboard',auth,  function(req, res) {
@@ -62,12 +64,12 @@ router.use(function timeLog(req, res,next){
       res.sendFile(path.join(__dirname+'/views/mypo.html'));
   });
 
-    router.get('/myitembids',auth,  function(req, res) {
+  router.get('/myitembids',auth,  function(req, res) {
 
       res.sendFile(path.join(__dirname+'/views/myitembids.html'));
   });
 
-    router.get('/search',auth,  function(req, res) {
+  router.get('/search',auth,  function(req, res) {
 
       res.sendFile(path.join(__dirname+'/views/search.html'));
   });
